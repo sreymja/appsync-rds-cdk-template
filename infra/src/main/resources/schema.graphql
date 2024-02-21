@@ -1,0 +1,105 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Mutation {
+    createTicket(
+        subject: String!,
+        markdown: String!,
+        statusId: Int!,
+        priorityId: Int!,
+        userId: Int!,
+        categoryId: Int!
+    ): Ticket
+#    createStatus(name: String!): Status
+#    createPriority(name: String!): Priority
+#    createUser(name: String!): User
+#    createCategory(name: String!): Category
+    createAudit(
+        operation: String!,
+        userId: Int!,
+        ticketId: Int!
+    ): Audit
+    createComment(
+        markdown: String!,
+        userId: Int!,
+        ticketId: Int!
+    ): Comment
+    setStatusOfTicket(id: ID!, statusId: Int!): Ticket
+    setPriorityOfTicket(id: ID!, priorityId: Int!): Ticket
+    setUserOfTicket(id: ID!, userId: Int!): Ticket
+    setCategoryOfTicket(id: ID!, categoryId: Int!): Ticket
+
+}
+
+type Query {
+    getTicket(id: ID!): Ticket
+    getTicketsByStatus(statusId: Int!): [Ticket]
+    getTicketsByUser(userId: Int!): [Ticket]
+    getTicketsByCategory(categoryId: Int!): [Ticket]
+    statuses: [Status]
+    priorities: [Priority]
+    categories: [Category]
+    searchUserByName(name: String!): [User]
+    getUser(id: ID!): User
+}
+
+type Ticket {
+    id: ID!
+    subject: String!
+    markdown: String!
+    statusId: Int!
+    priorityId: Int!
+    userId: Int!
+    categoryId: Int!
+    createdAt: String!
+    updatedAt: String!
+    completedAt: String
+    comments: [Comment]
+    audits: [Audit]
+}
+
+type Status {
+    id: ID!
+    name: String!
+    tickets: [Ticket]
+}
+
+type Priority {
+    id: ID!
+    name: String!
+    tickets: [Ticket]
+}
+
+type User {
+    id: ID!
+    name: String!
+    tickets: [Ticket]
+    comments: [Comment]
+    audits: [Audit]
+}
+
+type Category {
+    id: ID!
+    name: String!
+    tickets: [Ticket]
+}
+
+type Audit {
+    id: ID!
+    operation: String!
+    userId: Int!
+    ticketId: Int!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type Comment {
+    id: ID!
+    markdown: String!
+    userId: Int!
+    ticketId: Int!
+    createdAt: String!
+    updatedAt: String!
+}
