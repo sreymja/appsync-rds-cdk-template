@@ -1,5 +1,6 @@
 package com.pennyhill;
 
+import com.amazon.rdsdata.client.RdsData;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.CloudFormationCustomResourceEvent;
@@ -12,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.flywaydb.core.Flyway;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.rdsdata.RdsDataClient;
 import software.amazon.awssdk.services.rdsdata.model.BadRequestException;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
@@ -68,15 +70,31 @@ public class FlywayLambdaHandler implements RequestHandler<CloudFormationCustomR
 
     private void migrate() {
         String secretArn = System.getenv("RDS_SECRET");
+        String clusterArn = System.getenv("CLUSTER_ARN");
+        String databaseName = System.getenv("DATABASE_NAME");
 
-        String region = secretArn.split(":")[3];
-        SecretsManagerClient secretsClient = SecretsManagerClient.builder()
-                .region(Region.of(region))
+        RdsData client = RdsData.builder()
+                .sdkClient(RdsDataClient.builder().build())
+                .database(databaseName)
+                .resourceArn(clusterArn)
+                .secretArn(secretArn)
                 .build();
 
-        var secret = getValue(secretsClient, secretArn);
-        Gson gson = new Gson();
-        var secretMap = gson.fromJson(secret, Map.class);
+        // Connect to the db to wake it up??!!
+        var sqlStmt = "select * from information_schema.tables;";
+        logger.info("Start running SQL :: " + sqlStmt);
+        var executionResult = client.forSql(sqlStmt).withContinueAfterTimeout().execute();
+        logger.info("SQL result :: " + executionResult.toString());
+        logger.info("Finished running SQL :: " + sqlStmt);
+
+//        String region = secretArn.split(":")[3];
+//        SecretsManagerClient secretsClient = SecretsManagerClient.builder()
+//                .region(Region.of(region))
+//                .build();
+
+//        var secret = getValue(secretsClient, secretArn);
+//        Gson gson = new Gson();
+//        var secretMap = gson.fromJson(secret, Map.class);
 
         var hikariConfig = new HikariConfig();
 
@@ -90,7 +108,7 @@ public class FlywayLambdaHandler implements RequestHandler<CloudFormationCustomR
         hikariConfig.setDriverClassName("com.amazonaws.secretsmanager.sql.AWSSecretsManagerPostgreSQLDriver");
         hikariConfig.setConnectionTimeout(140000);
 
-        secretsClient.close();
+//        secretsClient.close();
 
         var ds = new HikariDataSource(hikariConfig);
 

@@ -7,3 +7,4 @@ A starter project for a graphql appsync endpoint with RDS resolvers and a Aurora
 2) local tests (localstack??)
 3) rest api gateway template
 4) post deploy tests
+5) versioning for lambdas to ensure deployment

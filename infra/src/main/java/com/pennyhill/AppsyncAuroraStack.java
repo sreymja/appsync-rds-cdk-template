@@ -69,7 +69,6 @@ public class AppsyncAuroraStack extends Stack {
         GraphqlApi api = new GraphqlApi(this, "AppSyncRDSResolver", GraphqlApiProps.builder()
                 .name("AppsyncRDSResolverAPI")
                 .definition(Definition.fromFile("src/main/resources/schema.graphql"))
-//                .schema(Schema.fromAsset("src/main/resources/schema.graphql"))
                 .authorizationConfig(AuthorizationConfig.builder()
                         .defaultAuthorization(AuthorizationMode.builder()
                                 .authorizationType(AuthorizationType.API_KEY)

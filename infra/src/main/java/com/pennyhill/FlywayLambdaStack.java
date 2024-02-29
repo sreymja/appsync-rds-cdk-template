@@ -5,6 +5,7 @@ import lombok.Setter;
 import software.amazon.awscdk.*;
 import software.amazon.awscdk.customresources.Provider;
 import software.amazon.awscdk.customresources.ProviderProps;
+import software.amazon.awscdk.services.ec2.Port;
 import software.amazon.awscdk.services.ec2.Vpc;
 import software.amazon.awscdk.services.iam.ManagedPolicy;
 import software.amazon.awscdk.services.iam.Role;
@@ -41,17 +42,33 @@ public class FlywayLambdaStack extends Stack {
                 .vpc(props.getVpc())
                 .securityGroups(props.getCluster().getConnections().getSecurityGroups())
                 .runtime(Runtime.JAVA_11)
-                .environment(Map.of("RDS_SECRET", props.getRdsSecret().getSecretArn()))
+                .environment(Map.of("RDS_SECRET", props.getRdsSecret().getSecretArn(),
+                        "CLUSTER_ARN", props.getCluster().getClusterArn(),
+                        "DATABASE_NAME", props.getDbName())
+                )
                 .code(Code.fromAsset("../flyway-lambda/target/flyway-lambda-0.0.1-SNAPSHOT.jar")) // the version number needs to be managed in the real world to ensure the redeploy of new versions
                 .handler("com.pennyhill.FlywayLambdaHandler::handleRequest")
                 .timeout(Duration.seconds(140))
                 .build());
 
+        var securityGroups = props.cluster.getConnections().getSecurityGroups();
+        securityGroups.forEach(g ->
+                g.addIngressRule(g, Port.tcp(5432)));
+
         props.getCluster().grantDataApiAccess(function);
 
 
 
+        Provider flywayProvider = new Provider(this, "AppSyncAuroraStackFlywayProvider", ProviderProps.builder()
+                .onEventHandler(function)
+                .build());
 
+        CustomResource cr = new CustomResource(this, "AppSyncAuroraStackFlywayCustomResource", CustomResourceProps.builder()
+                .serviceToken(flywayProvider.getServiceToken())
+                .resourceType("Custom::FlywayProvider")
+                .build());
+
+        cr.getNode().addDependency(props.getCluster());
     }
 
     @lombok.Builder
@@ -61,6 +78,7 @@ public class FlywayLambdaStack extends Stack {
         private Vpc vpc;
         private Environment env;
         private Secret rdsSecret;
+        private String dbName;
         private ServerlessCluster cluster;
     }
 }

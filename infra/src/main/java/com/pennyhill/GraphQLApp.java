@@ -31,13 +31,14 @@ public class GraphQLApp {
                 .vpc(vpcStack.getVpc())
                 .cluster(auroraStack.getCluster())
                 .rdsSecret(auroraStack.getRdsSecret())
+                .dbName(auroraStack.getDbName())
                 .build());
 
-        new FlywayProviderStack(app, prefix + "flyway-provider-stack", FlywayProviderStack.FlywayProviderStackProps.builder()
-                .env(environment)
-                .function(lambdaStack.getFunction())
-                .cluster(auroraStack.getCluster())
-                .build());
+//        new FlywayProviderStack(app, prefix + "flyway-provider-stack", FlywayProviderStack.FlywayProviderStackProps.builder()
+//                .env(environment)
+//                .function(lambdaStack.getFunction())
+//                .cluster(auroraStack.getCluster())
+//                .build());
 
         app.synth();
     }
