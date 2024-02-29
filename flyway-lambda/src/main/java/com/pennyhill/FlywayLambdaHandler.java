@@ -12,9 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.flywaydb.core.Flyway;
 import software.amazon.awssdk.services.rdsdata.RdsDataClient;
-import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
-import software.amazon.awssdk.services.secretsmanager.model.SecretsManagerException;
 
 
 public class FlywayLambdaHandler implements RequestHandler<CloudFormationCustomResourceEvent, String> {
