@@ -12,10 +12,6 @@ public class VPCStack extends Stack {
 
     private final Vpc vpc;
 
-    public VPCStack(final Construct scope, final String id) {
-        this(scope, id, null);
-    }
-
     public VPCStack(final Construct scope, final String id, final StackProps props) {
         super(scope, id, props);
 

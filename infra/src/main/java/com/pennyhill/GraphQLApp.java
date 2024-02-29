@@ -26,19 +26,13 @@ public class GraphQLApp {
                 .vpc(vpcStack.getVpc())
                 .build());
 
-        FlywayLambdaStack lambdaStack = new FlywayLambdaStack(app, prefix + "flyway-lambda-stack", FlywayLambdaStack.FlywayLambdaStackProps.builder()
+        new FlywayLambdaStack(app, prefix + "flyway-lambda-stack", FlywayLambdaStack.FlywayLambdaStackProps.builder()
                 .env(environment)
                 .vpc(vpcStack.getVpc())
                 .cluster(auroraStack.getCluster())
                 .rdsSecret(auroraStack.getRdsSecret())
                 .dbName(auroraStack.getDbName())
                 .build());
-
-//        new FlywayProviderStack(app, prefix + "flyway-provider-stack", FlywayProviderStack.FlywayProviderStackProps.builder()
-//                .env(environment)
-//                .function(lambdaStack.getFunction())
-//                .cluster(auroraStack.getCluster())
-//                .build());
 
         app.synth();
     }

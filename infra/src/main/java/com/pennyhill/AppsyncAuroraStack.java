@@ -28,9 +28,6 @@ public class AppsyncAuroraStack extends Stack {
     private final String dbName;
     private final Secret rdsSecret;
     private final ServerlessCluster cluster;
-    public AppsyncAuroraStack(final Construct scope, final String id) {
-        this(scope, id, null);
-    }
 
     public AppsyncAuroraStack(final Construct scope, final String id, final AppsyncAuroraStackProps props) {
         super(scope, id, props);
@@ -85,7 +82,7 @@ public class AppsyncAuroraStack extends Stack {
                 resolver -> ds.createResolver(resolver.getProps().getFieldName() + resolver.getProps().getTypeName(), resolver.getProps())
         );
 
-        CfnOutput output = new CfnOutput(this, "AppSyncAuroraAPIURL", CfnOutputProps.builder()
+        new CfnOutput(this, "AppSyncAuroraAPIURL", CfnOutputProps.builder()
                 .value(api.getGraphqlUrl())
                 .build());
 
