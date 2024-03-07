@@ -8,3 +8,9 @@ A starter project for a graphql appsync endpoint with RDS resolvers and a Aurora
 3) rest api gateway template
 4) post deploy tests
 5) versioning for lambdas to ensure deployment
+
+
+```shell
+npx graphql-schema-utilities -s "{infra/src/main/resources/gen/schema.graphql,infra/src/main/resources/*.graphql}" \
+  -o "infra/src/main/resources/merged/schema.graphql"
+```

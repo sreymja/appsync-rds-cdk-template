@@ -1,0 +1,208 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    getAuditById(id: ID!): Audit
+    audits: [Audit]
+    getCategoryById(id: ID!): Category
+    categories: [Category]
+    getCommentById(id: ID!): Comment
+    comments: [Comment]
+    getPriorityById(id: ID!): Priority
+    priorities: [Priority]
+    getStatusById(id: ID!): Status
+    statuses: [Status]
+    getTicketById(id: ID!): Ticket
+    tickets: [Ticket]
+    getUserById(id: ID!): User
+    users: [User]
+}
+
+type Mutation {
+    createAudit(input: AuditCreateInput): Audit
+    updateAudit(audit: AuditUpdateInput): Audit
+    createCategory(input: CategoryCreateInput): Category
+    updateCategory(category: CategoryUpdateInput): Category
+    createComment(input: CommentCreateInput): Comment
+    updateComment(comment: CommentUpdateInput): Comment
+    createPriority(input: PriorityCreateInput): Priority
+    updatePriority(priority: PriorityUpdateInput): Priority
+    createStatus(input: StatusCreateInput): Status
+    updateStatus(status: StatusUpdateInput): Status
+    createTicket(input: TicketCreateInput): Ticket
+    updateTicket(ticket: TicketUpdateInput): Ticket
+    createUser(input: UserCreateInput): User
+    updateUser(user: UserUpdateInput): User
+}
+
+type Audit {
+    id: ID!
+    operation: String!
+    user_id: Int!
+    ticket_id: Int!
+    created_at: String!
+    updated_at: String!
+}
+
+type Category {
+    id: ID!
+    name: String!
+    tickets: [Ticket]
+}
+
+type Comment {
+    id: ID!
+    markdown: String!
+    user_id: Int!
+    ticket_id: Int!
+    created_at: String!
+    updated_at: String!
+}
+
+type Priority {
+    id: ID!
+    name: String!
+    tickets: [Ticket]
+}
+
+type Status {
+    id: ID!
+    name: String!
+    tickets: [Ticket]
+}
+
+type Ticket {
+    id: ID!
+    subject: String!
+    markdown: String!
+    status_id: Int!
+    priority_id: Int!
+    user_id: Int!
+    category_id: Int!
+    created_at: String!
+    updated_at: String!
+    completed_at: String
+    audits: [Audit]
+    comments: [Comment]
+}
+
+type User {
+    id: ID!
+    name: String!
+    audits: [Audit]
+    comments: [Comment]
+    tickets: [Ticket]
+}
+
+
+input AuditUpdateInput {
+        id: ID!
+        operation: String!
+        user_id: Int!
+        ticket_id: Int!
+        created_at: String!
+        updated_at: String!
+}
+
+
+input CategoryUpdateInput {
+        id: ID!
+        name: String!
+}
+
+
+input CommentUpdateInput {
+        id: ID!
+        markdown: String!
+        user_id: Int!
+        ticket_id: Int!
+        created_at: String!
+        updated_at: String!
+}
+
+
+input PriorityUpdateInput {
+        id: ID!
+        name: String!
+}
+
+
+input StatusUpdateInput {
+        id: ID!
+        name: String!
+}
+
+
+input TicketUpdateInput {
+        id: ID!
+        subject: String!
+        markdown: String!
+        status_id: Int!
+        priority_id: Int!
+        user_id: Int!
+        category_id: Int!
+        created_at: String!
+        updated_at: String!
+        completed_at: String
+}
+
+
+input UserUpdateInput {
+        id: ID!
+        name: String!
+}
+
+
+input AuditCreateInput {
+        operation: String!
+        user_id: Int!
+        ticket_id: Int!
+        created_at: String!
+        updated_at: String!
+}
+
+
+input CategoryCreateInput {
+        name: String!
+}
+
+
+input CommentCreateInput {
+        markdown: String!
+        user_id: Int!
+        ticket_id: Int!
+        created_at: String!
+        updated_at: String!
+}
+
+
+input PriorityCreateInput {
+        name: String!
+}
+
+
+input StatusCreateInput {
+        name: String!
+}
+
+
+input TicketCreateInput {
+        subject: String!
+        markdown: String!
+        status_id: Int!
+        priority_id: Int!
+        user_id: Int!
+        category_id: Int!
+        created_at: String!
+        updated_at: String!
+        completed_at: String
+}
+
+
+input UserCreateInput {
+        name: String!
+}
+
+

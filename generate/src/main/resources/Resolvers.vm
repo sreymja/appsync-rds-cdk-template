@@ -1,0 +1,76 @@
+package com.pennyhill.gen;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import software.amazon.awscdk.services.appsync.BaseResolverProps;
+import software.amazon.awscdk.services.appsync.MappingTemplate;
+
+public class Resolvers {
+
+    public static List<BaseResolverProps> getResolverProps() {
+        return List.of(
+            // Queries
+        #foreach($schema in $schemas)
+            #foreach($query in ${schema.queries})
+            BaseResolverProps.builder()
+                .fieldName("${query.name}")
+                .typeName("Query")
+                .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
+                    #foreach($q in ${query.queries})
+                            "$q"#if( $foreach.hasNext),$newline #end #end))))
+                .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
+                .build()#if( $foreach.hasNext ), #end
+            #end
+            #if( $foreach.hasNext ), #end
+        #end,
+            // Mutations
+        #foreach($schema in $schemas)
+            #foreach($query in ${schema.mutations})
+            BaseResolverProps.builder()
+                .fieldName("${query.name}")
+                .typeName("Mutation")
+                .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
+                    #foreach($q in ${query.queries})
+                            "$q"#if( $foreach.hasNext),$newline #end #end))))
+                .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
+                .build()#if( $foreach.hasNext ), #end
+            #end
+            #if( $foreach.hasNext ), #end
+        #end,
+            // Relations
+        #foreach($schema in $schemasWithFk)
+            #foreach($relation in ${schema.foreignKeys})
+            BaseResolverProps.builder()
+                .fieldName("${relation.fkTableName}")
+                .typeName("${relation.typeName}")
+                .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
+                    #foreach($query in ${relation.queries})
+                        "$query"#if( $foreach.hasNext), #end #end))))
+                .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
+                .build()#if( $foreach.hasNext), #end
+            #end #if( $foreach.hasNext), #end
+        #end
+        );
+    }
+
+    public static final String RESPONSE_TEMPLATE = """
+                        $responseTemplate
+            """;
+
+    public static String requestTemplate(Boolean generateId, List<String> sqlQueries) {
+        var statements = sqlQueries.stream().map(q ->
+                "        \"" + q + "\""
+        ).collect(Collectors.joining(",\n"));
+        var idLine = generateId ? "#[[#set($id=$utils.autoId())]]#\n" : "";
+        return idLine +
+                """
+                        {
+                            "version": "2018-05-29",
+                            "statements": [
+                                %s
+                            ]
+                        }
+                        """.formatted(statements);
+    }
+}

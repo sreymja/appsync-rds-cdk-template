@@ -1,0 +1,20 @@
+{
+  "name": "infra",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "introspection.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "introspect": "node introspection.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sreymja/appsync-rds-cdk-template.git"
+  },
+  "private": true,
+  "devDependencies": {
+    "@aws-sdk/client-appsync": "^3.525.0",
+    "@aws-appsync/utils": "~1.7.0"
+  }
+}

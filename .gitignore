@@ -1,0 +1,6 @@
+**/package-lock.json
+**/target/
+**/node_modules
+.idea
+**/cdk.context.json
+/infra/outputs.json

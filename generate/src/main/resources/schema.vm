@@ -1,0 +1,53 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+#foreach($schema in $schemas)
+    #foreach($query in ${schema.queries})
+    ${query.name}${query.paramsStr}: ${query.returnTypeStr}
+    #end
+#end
+}
+
+type Mutation {
+#foreach($schema in $schemas)
+    #foreach($mutation in ${schema.mutations})
+    ${mutation.name}${mutation.paramsStr}: ${mutation.returnTypeStr}
+    #end
+#end
+}
+
+#foreach($schema in $schemas)
+type ${schema.className} {
+    #foreach($column in ${schema.columns})
+    ${column.name}: ${column.type}
+    #end
+    #foreach($oneToMany in ${schema.oneToManyRelations})
+    ${oneToMany.name}: [${oneToMany.type}]
+    #end
+}
+
+#end
+
+#foreach($schema in $schemas)
+input ${schema.className}UpdateInput {
+    #foreach($column in ${schema.columns})
+        ${column.name}: ${column.type}
+    #end
+}
+
+
+#end
+#foreach($schema in $schemas)
+input ${schema.className}CreateInput {
+    #foreach($column in ${schema.columns})
+        #if(${column.name} != "id")
+        ${column.name}: ${column.type}
+        #end
+    #end
+}
+
+
+#end

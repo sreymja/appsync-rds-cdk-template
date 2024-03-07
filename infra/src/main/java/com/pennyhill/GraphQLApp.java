@@ -2,7 +2,6 @@ package com.pennyhill;
 
 import software.amazon.awscdk.App;
 import software.amazon.awscdk.Environment;
-import software.amazon.awscdk.StackProps;
 
 import java.util.Optional;
 
@@ -17,21 +16,33 @@ public class GraphQLApp {
                 .region(System.getenv("CDK_DEFAULT_REGION"))
                 .build();
 
-        VPCStack vpcStack = new VPCStack(app, prefix + "graphql-vpc-stack", StackProps.builder()
+        VPCStack vpcStack = new VPCStack(app, prefix + "vpc-stack", VPCStack.VPCStackProps.builder()
                 .env(environment)
+                .prefix(prefix)
                 .build());
 
-        AppsyncAuroraStack auroraStack = new AppsyncAuroraStack(app, prefix + "appsync-aurora-stack", AppsyncAuroraStack.AppsyncAuroraStackProps.builder()
+        DatabaseStack databaseStack = new DatabaseStack(app, prefix + "database-stack", DatabaseStack.DatabaseStackProps.builder()
                 .env(environment)
+                .prefix(prefix)
                 .vpc(vpcStack.getVpc())
                 .build());
 
         new FlywayLambdaStack(app, prefix + "flyway-lambda-stack", FlywayLambdaStack.FlywayLambdaStackProps.builder()
                 .env(environment)
+                .prefix(prefix)
                 .vpc(vpcStack.getVpc())
-                .cluster(auroraStack.getCluster())
-                .rdsSecret(auroraStack.getRdsSecret())
-                .dbName(auroraStack.getDbName())
+                .cluster(databaseStack.getCluster())
+                .rdsSecret(databaseStack.getRdsSecret())
+                .dbName(databaseStack.getDbName())
+                .build());
+
+        new AppSyncStack(app, prefix + "app-sync-stack", AppSyncStack.AppSyncStackProps.builder()
+                .env(environment)
+                .prefix(prefix)
+                .vpc(vpcStack.getVpc())
+                .cluster(databaseStack.getCluster())
+                .rdsSecret(databaseStack.getRdsSecret())
+                .dbName(databaseStack.getDbName())
                 .build());
 
         app.synth();

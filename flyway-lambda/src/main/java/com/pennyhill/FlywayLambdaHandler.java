@@ -5,20 +5,21 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.CloudFormationCustomResourceEvent;
 import com.google.gson.JsonObject;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.pool.HikariPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.flywaydb.core.Flyway;
+import software.amazon.awssdk.core.ResponseBytes;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.rdsdata.RdsDataClient;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+
+import java.nio.charset.StandardCharsets;
 
 
 public class FlywayLambdaHandler implements RequestHandler<CloudFormationCustomResourceEvent, String> {
 
     private static final Logger logger = LogManager.getLogger(FlywayLambdaHandler.class);
-    private static final int MAX_RETRIES = 2;
-
     @Override
     public String handleRequest(CloudFormationCustomResourceEvent event, Context context) {
         String requestType = event.getRequestType();
@@ -26,7 +27,7 @@ public class FlywayLambdaHandler implements RequestHandler<CloudFormationCustomR
         logger.info("Request Type :: " + event.getRequestType());
         logger.info("Properties :: " + event.getResourceProperties());
 
-        migrate();
+        runSqlFromS3();
 
         JsonObject retJson = new JsonObject();
         if (requestType != null) {
@@ -42,10 +43,12 @@ public class FlywayLambdaHandler implements RequestHandler<CloudFormationCustomR
         return retJson.toString();
     }
 
-    private void migrate() {
+    private static void runSqlFromS3(){
+
         String secretArn = System.getenv("RDS_SECRET");
         String clusterArn = System.getenv("CLUSTER_ARN");
         String databaseName = System.getenv("DATABASE_NAME");
+        String migrationsBucketName = System.getenv("MIGRATIONS_BUCKET");
 
         RdsData client = RdsData.builder()
                 .sdkClient(RdsDataClient.builder().build())
@@ -54,45 +57,33 @@ public class FlywayLambdaHandler implements RequestHandler<CloudFormationCustomR
                 .secretArn(secretArn)
                 .build();
 
-        // Connect to the db to wake it up??!!
-        var sqlStmt = "select * from information_schema.tables;";
+        S3Client s3 = S3Client.builder()
+                .region(Region.US_EAST_1)
+                .build();
+
+        var bytes = getObjectBytes(s3, migrationsBucketName, "V1__Create_first_tables.sql");
+        String sqlStmt = new String(bytes, StandardCharsets.UTF_8);
         logger.info("Start running SQL :: " + sqlStmt);
         var executionResult = client.forSql(sqlStmt).withContinueAfterTimeout().execute();
         logger.info("SQL result :: " + executionResult.toString());
         logger.info("Finished running SQL :: " + sqlStmt);
 
-        var hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(secretArn);
-
-        hikariConfig.setUsername(secretArn);
-        hikariConfig.setDriverClassName("com.amazonaws.secretsmanager.sql.AWSSecretsManagerPostgreSQLDriver");
-        hikariConfig.setConnectionTimeout(140000);
-
-        var ds = new HikariDataSource(hikariConfig);
-
-        var flyway = Flyway.configure().dataSource(ds).load();
-
-        int i = 0;
-        while (i < MAX_RETRIES ) {
-            try {
-                var result = flyway.migrate();
-                if(result.success) i = MAX_RETRIES;
-                else i++;
-            } catch (HikariPool.PoolInitializationException poolInitializationException) {
-                i++;
-                logger.info("retry in 30 secs");
-                try {
-                    Thread.sleep(30 * 1000);
-                } catch (InterruptedException e) {
-                    logger.error(e);
-                }
-            } catch (Exception e) {
-                logger.error(e);
-                throw e;
-            }
-
-        }
+        s3.close();
     }
+
+    public static byte[] getObjectBytes(S3Client s3, String bucketName, String keyName) {
+
+            GetObjectRequest objectRequest = GetObjectRequest
+                    .builder()
+                    .key(keyName)
+                    .bucket(bucketName)
+                    .build();
+
+            ResponseBytes<GetObjectResponse> objectBytes = s3.getObjectAsBytes(objectRequest);
+            return objectBytes.asByteArray();
+
+    }
+
 
 
 }
