@@ -27,7 +27,7 @@ public class GraphQLApp {
                 .vpc(vpcStack.getVpc())
                 .build());
 
-        new FlywayLambdaStack(app, prefix + "flyway-lambda-stack", FlywayLambdaStack.FlywayLambdaStackProps.builder()
+        new SqlLambdaStack(app, prefix + "sql-lambda-stack", SqlLambdaStack.SqlLambdaStackProps.builder()
                 .env(environment)
                 .prefix(prefix)
                 .vpc(vpcStack.getVpc())

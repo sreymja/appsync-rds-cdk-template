@@ -22,9 +22,7 @@ probably not going to want to set up APIs across multiple environments by loggin
 need some infrastructure as code and it'll come as no surprise to anyone who's read the title of the blog that I'm going to use the CDK
 
 ### the CDK
-According to the docs the CDK supports **_"TypeScript, Python, Java, .NET, and Go (in Developer Preview)"_**. 
-I spend most of my time as a Tech Lead and more often than not Java (or at least a JVM language) is what we’re writing 
-the backend in so on the basis that it's a scenario I'm likely to see again I thought I'd use Java.
+According to the docs the CDK supports **_"TypeScript, Python, Java, .NET, and Go (in Developer Preview)"_**. I'm using Java
 
 If you want to do the CDK in the JVM space then AWS only supports code written in Java using maven
 as the build tool. But that doesn't mean you can't use Kotlin and gradle which is exactly what I did on my next
@@ -61,7 +59,7 @@ DatabaseStack databaseStack = new DatabaseStack(app, prefix + "database-stack", 
         .vpc(vpcStack.getVpc())
         .build());
 
-FlywayLambdaStack flywayStack = new FlywayLambdaStack(app, prefix + "flyway-lambda-stack", FlywayLambdaStack.FlywayLambdaStackProps.builder()
+SqlLambdaStack sqlLambdaStack = new SqlLambdaStack(app, prefix + "sqk-lambda-stack", SqlLambdaStack.SqlLambdaStackProps.builder()
         .env(environment)
         .prefix(prefix)
         .vpc(vpcStack.getVpc())
@@ -77,9 +75,9 @@ new AppSyncStack(app, prefix + "app-sync-stack", AppSyncStack.AppSyncStackProps.
         .cluster(databaseStack.getCluster())
         .rdsSecret(databaseStack.getRdsSecret())
         .dbName(databaseStack.getDbName())
-        .build()).addDependency(flywayStack);
+        .build());
 ```
-As you can see I've got four stacks the VPCStack, DatabaseStack, FlywayLambdaStack and AppSyncStack
+As you can see I've got four stacks the VPCStack, DatabaseStack, SqlLambdaStack and AppSyncStack
 
 ### VPC Stack
 The VPC stack is really simple since it just contains the VPC
@@ -134,18 +132,23 @@ cluster = new ServerlessCluster(this, clusterId, ServerlessClusterProps.builder(
         .credentials(Credentials.fromSecret(rdsSecret))
         .build());
 ```
-Once the cluster is set up we need to put some schema in the DB for which we're using flyway so the next stack to run
-is the flyway stack
+Once the cluster is set up we need to put some schema in the DB so the next stack to run
+is the sql stack
 
-### Flyway Lambda Stack
+### SQL Lambda Stack
 How do we do migrations in a serverless world? Before we could just use Flyway
 or Liquibase to deploy them as the webserver we were hosting our microservice on
 spin up. But we don't have a webserver any more and we don't want to add
-to our lambda spin up times by checking for un-deployed migrations at the start of every lambda.
+to our lambda spin up times by checking for un-deployed migrations at the start of every lambda. Our AppSync API only
+has resolvers so there's not even a lambda start up to hook into.
+
+#### Flyway
+I spent some time trying to get a flyway lambda to work and to some degree it did work but it was difficult to work with
+and I realized that I could probably get closer to what I wanted using my own code. For this 
 
 The stack sets up a lambda function
 ```java
-function = new Function(this, "FlywayLambda", FunctionProps.builder()
+function = new Function(this, "SqlLambda", FunctionProps.builder()
         .role(lambdaRole)
         .memorySize(1024)
         .vpc(props.getVpc())
@@ -155,29 +158,18 @@ function = new Function(this, "FlywayLambda", FunctionProps.builder()
                 "CLUSTER_ARN", props.getCluster().getClusterArn(),
                 "DATABASE_NAME", props.getDbName())
         )
-        .code(Code.fromAsset("../flyway-lambda/target/flyway-lambda-0.0.1-SNAPSHOT.jar")) // the version number needs to be managed in the real world to ensure the redeploy of new versions
-        .handler("com.pennyhill.FlywayLambdaHandler::handleRequest")
+        .code(Code.fromAsset("../sql-lambda/target/sql-lambda-0.0.1-SNAPSHOT.jar")) // the version number needs to be managed in the real world to ensure the redeploy of new versions
+        .handler("com.pennyhill.SqlLambdaHandler::handleRequest")
         .timeout(Duration.seconds(140))
         .build());
 ```
-which is just a wrapper around
-```java
-flyway.migrate();
-```
-then we set up a provider and custom resource that calls the lambda as part of the
-stack deployment.
-```java
-Provider flywayProvider = new Provider(this, "AppSyncAuroraStackFlywayProvider", ProviderProps.builder()
-        .onEventHandler(function)
-        .build());
+~~which is just a wrapper around~~
 
-CustomResource cr = new CustomResource(this, "AppSyncAuroraStackFlywayCustomResource", CustomResourceProps.builder()
-        .serviceToken(flywayProvider.getServiceToken())
-        .resourceType("Custom::FlywayProvider")
-        .build());
-```
-The migrations live in the usual resources folder location and that's all there is to it. Once the schema is migrated we
-can deploy the API
+~~then we set up a provider and custom resource that calls the lambda as part of the
+stack deployment.~~
+
+~~The migrations live in the usual resources folder location and that's all there is to it. Once the schema is migrated we
+can deploy the API~~
 
 ### AppSync Stack
 
@@ -252,13 +244,17 @@ getResolverProps().forEach(
 
 ### So far so good...
 
-We now have 3 areas where code changes happen because as we develop the app; the sql schema in the flyway migrations,
+We now have 3 areas where code changes happen because as we develop the app; the sql schema in the sql migrations,
 the schema.graphql file we load into the AppSync stack and the resolvers we use to support the graphql schema. Generating
 in the web console gives us the basic get one, get all, create and update options for each table in the sql schema
-(that includes the flyway table but that's not really something we want). The aim at the start was to have something as
+(that includes the every table and that may not be something we want). The aim at the start was to have something as
 good as the web console wizard so we need to generate some code.
 
 ## Part 2 - generate some code.
+### Schema changes
+If you want to try the code out but would like to use your own schema you can make changes to the files in the sql-scripts
+folder and then go through the following steps to generate the code for the changes you've made. If you're happy to use
+the existing schema go straight to the "Deploying the app" section.
 ### introspection
 First things first we need to be able to gather the metadata from the database and use that to inform the code we're
 generating. I did take a look at the options of just using the AWS introspection options that are basically the underpinnings
@@ -266,18 +262,15 @@ of the wizard we're trying to emulate. After a few hours I'd really not got as m
 metadata of the datasource. Anyway I'm not sure generating the code on the fly as you deploy isn't an anti-pattern. If we
 generate from a local copy of the schema we would at least see what we've changed before we deploy it.
 
-For a local db instance run
+To generate the code we need a local copy of the database with the schema loaded into it. For this I'm using docker compose
+and loading up the contents of the init.sql file in the sql-scripts folder. If you've made changes to the schema and 
+test-data folders in sql-scripts you'll need to run generate-init-sql.sh in the sql-scripts folder. Once that's done
+you can start the local instance using
 ```shell
 docker-compose up
 ```
-in the root directory.
-Once that's up and taking connections
-```shell
-cd flyway-lambda
-mvn flyway:migrate -Dflyway.url=jdbc:postgresql://localhost:5432/testDB -Dflyway.user=test -Dflyway.password=testpassword
-```
-gets the schema into the local db. Then just run the main file in the generate module and it'll create a couple of files
-in the infra module. 
+Then just run the main file in the generate module and it'll create a couple of files
+in the infra module.
 
 `infra/src/main/java/com/pennyhill/gen/Resolvers.java`
 `infra/src/main/resources/gen/schema.graphql`
@@ -307,11 +300,7 @@ If you're interested in the detail take a look at the code (see Useful links bel
 
 ### Deploying the app
 Now we have everything set up we just need to get it into our AWS account. Assuming your credentials are set up for the
-cli in the normal way then you can just use
-```shell
-cdk deploy --all
-```
-which will take a while and hopefully work :)
+cli in the normal way then run the deploy.sh file in the infra folder which will take a while and hopefully work :)
 
 ## Conclusion
 Assuming it works that's great as long as you have a sql schema you can go from there with relatively little effort to an API.

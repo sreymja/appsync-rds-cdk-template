@@ -23,15 +23,16 @@ import static com.pennyhill.Constants.SQL_SCRIPTS_BUCKET_NAME;
 import static software.amazon.awscdk.services.s3.EventType.OBJECT_CREATED;
 
 @Getter
-public class FlywayLambdaStack extends Stack {
+public class SqlLambdaStack extends Stack {
 
     private final Function function;
-    public FlywayLambdaStack(final Construct scope, final String id, final FlywayLambdaStackProps props) {
+
+    public SqlLambdaStack(final Construct scope, final String id, final SqlLambdaStackProps props) {
         super(scope, id, props);
 
         Bucket s3 = Bucket.Builder.create(this, props.getPrefix() + SQL_SCRIPTS_BUCKET_NAME).build();
 
-        Role lambdaRole = new Role(this, "AppSyncAuroraStackFlywayLambdaRole", RoleProps.builder()
+        Role lambdaRole = new Role(this, "AppSyncAuroraStackSqlLambdaRole", RoleProps.builder()
                 .assumedBy(new ServicePrincipal("lambda.amazonaws.com"))
                 .build());
         lambdaRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
@@ -40,23 +41,31 @@ public class FlywayLambdaStack extends Stack {
         PolicyStatement statement3 = PolicyStatement.Builder.create()
                 .effect(Effect.ALLOW)
                 .actions(List.of("s3:*"))
-                .resources(List.of("arn:aws:s3:::"+s3.getBucketName()+"/*")).build();
-        lambdaRole.attachInlinePolicy(new Policy(this,"s3-bucket-policy",
-                PolicyProps.builder().statements(List.of( new PolicyStatement[]{statement3})).build()));
+                .resources(List.of("arn:aws:s3:::" + s3.getBucketName() + "/*")).build();
+        lambdaRole.attachInlinePolicy(new Policy(this, "s3-bucket-policy",
+                PolicyProps.builder().statements(List.of(new PolicyStatement[]{statement3})).build()));
 
-        function = new Function(this, props.getPrefix() + "FlywayLambda", FunctionProps.builder()
+        s3.addToResourcePolicy(PolicyStatement.Builder.create()
+                .effect(Effect.ALLOW)
+                .actions(List.of("s3:*"))
+                .resources(List.of("arn:aws:s3:::" + s3.getBucketName() + "/*"))
+                .principals(List.of(lambdaRole.getGrantPrincipal()))
+                .build()
+        );
+
+        function = new Function(this, props.getPrefix() + "SqlLambda", FunctionProps.builder()
                 .role(lambdaRole)
                 .memorySize(1024)
                 .vpc(props.getVpc())
                 .securityGroups(props.getCluster().getConnections().getSecurityGroups())
-                .runtime(Runtime.JAVA_11)
+                .runtime(Runtime.JAVA_21)
                 .environment(Map.of("RDS_SECRET", props.getRdsSecret().getSecretArn(),
                         "CLUSTER_ARN", props.getCluster().getClusterArn(),
                         "DATABASE_NAME", props.getDbName(),
                         "MIGRATIONS_BUCKET", s3.getBucketName())
                 )
-                .code(Code.fromAsset("../flyway-lambda/target/flyway-lambda-0.0.1-SNAPSHOT.jar")) // the version number needs to be managed in the real world to ensure the redeploy of new versions
-                .handler("com.pennyhill.FlywayLambdaHandler::handleRequest")
+                .code(Code.fromAsset("../sql-lambda/target/sql-lambda-0.0.1-SNAPSHOT.jar")) // the version number needs to be managed in the real world to ensure the redeploy of new versions
+                .handler("com.pennyhill.SqlLambdaHandler::handleRequest")
                 .timeout(Duration.seconds(140))
                 .build());
 
@@ -67,7 +76,7 @@ public class FlywayLambdaStack extends Stack {
         props.getCluster().grantDataApiAccess(function);
 
         LambdaDestination functionDestination = new LambdaDestination(function);
-        s3.addEventNotification(OBJECT_CREATED,functionDestination);
+        s3.addEventNotification(OBJECT_CREATED, functionDestination);
 
         new CfnOutput(this, "SqlScriptsBucket", CfnOutputProps.builder().value(s3.getBucketName()).build());
 
@@ -76,7 +85,7 @@ public class FlywayLambdaStack extends Stack {
     @lombok.Builder
     @Setter
     @Getter
-    public static class FlywayLambdaStackProps implements StackProps{
+    public static class SqlLambdaStackProps implements StackProps {
         private Vpc vpc;
         private Environment env;
         private String prefix;

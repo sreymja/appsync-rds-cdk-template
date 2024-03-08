@@ -44,6 +44,7 @@ public class AppSyncStack extends Stack {
 
         new CfnOutput(this, "ApiKey", CfnOutputProps.builder().value(api.getApiKey()).build());
         new CfnOutput(this, "GraphqlUrl", CfnOutputProps.builder().value(api.getGraphqlUrl()).build());
+        new CfnOutput(this, "ApiId", CfnOutputProps.builder().value(api.getApiId()).build());
     }
 
     @lombok.Builder

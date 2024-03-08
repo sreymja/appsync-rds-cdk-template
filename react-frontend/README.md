@@ -1,3 +1,12 @@
+```shell
+npx @aws-amplify/cli codegen add --apiId <...> --region <...>
+```
+```shell
+export AWS_PROFILE=cloud-guru && npx @aws-amplify/cli codegen add --apiId cwuurpwp4vc75nnqo2tzmn5wea --region us-east-1
+```
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

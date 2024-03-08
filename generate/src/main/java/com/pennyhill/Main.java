@@ -18,6 +18,7 @@ import java.util.List;
 import static com.pennyhill.FileUtils.writeToFile;
 
 public class Main {
+
     public static void main(String[] args) {
         VelocityEngine velocityEngine = new VelocityEngine();
         velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
@@ -62,7 +63,8 @@ public class Main {
                 while (tables.next()) {
                     var catalog = tables.getString(2);
                     var name = tables.getString(3);
-                    if (!name.contains("flyway")) {
+                    String EXCLUDED_TABLE = "excluded";
+                    if (!name.contains(EXCLUDED_TABLE)) {
                         var columns = new ArrayList<TableSchema.Column>();
                         var columnSet = metaData.getColumns(catalog, null, name, null);
                             while (columnSet.next()) {

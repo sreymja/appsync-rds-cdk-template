@@ -1,5 +1,5 @@
 {
-  "app": "cd ../flyway-lambda && mvn clean package  && cd ../infra && mvn -e -q compile exec:java",
+  "app": "cd ../sql-lambda && mvn clean package  && cd ../infra && mvn -e -q compile exec:java",
   "requireApproval": "never",
   "watch": {
     "include": [

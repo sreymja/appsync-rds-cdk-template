@@ -12,12 +12,12 @@ then
   cdk bootstrap
 fi
 
-cdk deploy "${prefix}vpc-stack" "${prefix}database-stack" "${prefix}flyway-lambda-stack" --parameters prefix="$prefix" \
+cdk deploy "${prefix}vpc-stack" "${prefix}database-stack" "${prefix}sql-lambda-stack" --parameters prefix="$prefix" \
   --outputs-file outputs.json
 
-sqlScriptsBucket=$(cat outputs.json | python3 -c "import json,sys;print(json.load(sys.stdin)[\"${prefix}flyway-lambda-stack\"][\"${prefix}SqlScriptsBucket\"])")
+sqlScriptsBucket=$(cat outputs.json | python3 -c "import json,sys;print(json.load(sys.stdin)[\"${prefix}sql-lambda-stack\"][\"${prefix}SqlScriptsBucket\"])")
 
-aws s3 sync ../sql-scripts "s3://$sqlScriptsBucket"
+aws s3 sync ../sql-scripts/schema "s3://$sqlScriptsBucket"
 
 cdk deploy "${prefix}app-sync-stack" --parameters prefix="$prefix" --outputs-file app-sync-outputs.json
 
