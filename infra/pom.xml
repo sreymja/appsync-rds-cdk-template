@@ -56,26 +56,10 @@
             <type>pom</type>
         </dependency>
 
-        <!--        <dependency>-->
-<!--            <groupId>software.amazon.awscdk</groupId>-->
-<!--            <artifactId>apigatewayv2-alpha</artifactId>-->
-<!--            <version>${cdk.version}-alpha.0</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>software.amazon.awscdk</groupId>-->
-<!--            <artifactId>apigatewayv2-integrations-alpha</artifactId>-->
-<!--            <version>${cdk.version}-alpha.0</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>software.amazon.awscdk</groupId>-->
-<!--            <artifactId>appsync-alpha</artifactId>-->
-<!--            <version>${cdk.version}-alpha.0</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
+            <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

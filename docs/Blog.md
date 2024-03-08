@@ -142,11 +142,13 @@ spin up. But we don't have a webserver any more and we don't want to add
 to our lambda spin up times by checking for un-deployed migrations at the start of every lambda. Our AppSync API only
 has resolvers so there's not even a lambda start up to hook into.
 
-#### Flyway
-I spent some time trying to get a flyway lambda to work and to some degree it did work but it was difficult to work with
-and I realized that I could probably get closer to what I wanted using my own code. For this 
+**_Flyway -_**
+_I spent some time trying to get a flyway lambda to work and to some degree it did work but it was difficult to work with
+and I realized that I could probably get closer to what I wanted using my own code._
 
-The stack sets up a lambda function
+The stack sets up a lambda function and an s3 bucket. Any file uploaded to the s3 bucket triggers the lambda which gets
+each file from the bucket and runs all the file contents as sql. That'll do for the minute since a full solution would be
+a blog all by itself.
 ```java
 function = new Function(this, "SqlLambda", FunctionProps.builder()
         .role(lambdaRole)
@@ -163,13 +165,6 @@ function = new Function(this, "SqlLambda", FunctionProps.builder()
         .timeout(Duration.seconds(140))
         .build());
 ```
-~~which is just a wrapper around~~
-
-~~then we set up a provider and custom resource that calls the lambda as part of the
-stack deployment.~~
-
-~~The migrations live in the usual resources folder location and that's all there is to it. Once the schema is migrated we
-can deploy the API~~
 
 ### AppSync Stack
 
@@ -302,6 +297,11 @@ If you're interested in the detail take a look at the code (see Useful links bel
 Now we have everything set up we just need to get it into our AWS account. Assuming your credentials are set up for the
 cli in the normal way then run the deploy.sh file in the infra folder which will take a while and hopefully work :)
 
+Once that's done run the load-test-data.sh script in the sql-scripts folder to put some values in the tables. Then you
+can go to the AppSync queries area to see some data.
+
+<img src="images/Console%20query%20screenshot.png" />
+
 ## Conclusion
 Assuming it works that's great as long as you have a sql schema you can go from there with relatively little effort to an API.
 Also assuming that the SQL schema is a work in progress this can flex with those changes. What we've sacrificed for 
@@ -313,7 +313,8 @@ changes to the API, bit of a pain if that's not the case though.
 ### Where's the tests?
 There's not many points in the code that we can do unit tests. The API is just an, albeit complex, infrastructure 
 definition. I think the only real way to test this is to check it's all working in the environment. Ideally we'd have
-automated testing and anything we'd generated would have test generated at the same time.
+automated testing and anything we'd generated would have test generated at the same time. If it's a backend for a frontend
+then you could run a full integration suite of tests using cypress or testcafe
 ### Going round the houses or round the bend?
 The feedback loop for small changes is daunting. Write your code then wait many minutes for the changes to deploy then
 see if it worked. That's nothing like the kind of feedback we're used to working on a local dev environment or using TDD.

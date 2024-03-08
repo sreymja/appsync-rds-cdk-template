@@ -32,7 +32,7 @@ public class SqlLambdaStack extends Stack {
 
         Bucket s3 = Bucket.Builder.create(this, props.getPrefix() + SQL_SCRIPTS_BUCKET_NAME).build();
 
-        Role lambdaRole = new Role(this, "AppSyncAuroraStackSqlLambdaRole", RoleProps.builder()
+        Role lambdaRole = new Role(this, "SqlLambdaRole", RoleProps.builder()
                 .assumedBy(new ServicePrincipal("lambda.amazonaws.com"))
                 .build());
         lambdaRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
@@ -41,24 +41,24 @@ public class SqlLambdaStack extends Stack {
         PolicyStatement statement3 = PolicyStatement.Builder.create()
                 .effect(Effect.ALLOW)
                 .actions(List.of("s3:*"))
-                .resources(List.of("arn:aws:s3:::" + s3.getBucketName() + "/*")).build();
+                .resources(List.of("arn:aws:s3:::" + s3.getBucketName(), "arn:aws:s3:::" + s3.getBucketName() + "/*")).build();
         lambdaRole.attachInlinePolicy(new Policy(this, "s3-bucket-policy",
                 PolicyProps.builder().statements(List.of(new PolicyStatement[]{statement3})).build()));
 
-        s3.addToResourcePolicy(PolicyStatement.Builder.create()
-                .effect(Effect.ALLOW)
-                .actions(List.of("s3:*"))
-                .resources(List.of("arn:aws:s3:::" + s3.getBucketName() + "/*"))
-                .principals(List.of(lambdaRole.getGrantPrincipal()))
-                .build()
-        );
+//        s3.addToResourcePolicy(PolicyStatement.Builder.create()
+//                .effect(Effect.ALLOW)
+//                .actions(List.of("s3:*"))
+//                .resources(List.of("arn:aws:s3:::" + s3.getBucketName(), "arn:aws:s3:::" + s3.getBucketName() + "/*"))
+//                .principals(List.of(lambdaRole.getGrantPrincipal()))
+//                .build()
+//        );
 
         function = new Function(this, props.getPrefix() + "SqlLambda", FunctionProps.builder()
                 .role(lambdaRole)
                 .memorySize(1024)
                 .vpc(props.getVpc())
                 .securityGroups(props.getCluster().getConnections().getSecurityGroups())
-                .runtime(Runtime.JAVA_21)
+                .runtime(Runtime.JAVA_17)
                 .environment(Map.of("RDS_SECRET", props.getRdsSecret().getSecretArn(),
                         "CLUSTER_ARN", props.getCluster().getClusterArn(),
                         "DATABASE_NAME", props.getDbName(),

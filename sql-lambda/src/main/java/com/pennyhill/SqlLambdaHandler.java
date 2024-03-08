@@ -40,15 +40,16 @@ public class SqlLambdaHandler implements RequestHandler<CloudFormationCustomReso
                 .build();
 
         List<String> files = listFiles(s3, migrationsBucketName);
+        logger.info("Bucket scanned :: " + files.size() + " files found");
         files.forEach(f -> {
-                    var bytes = getObjectBytes(s3, migrationsBucketName, f);
-                    String sqlStmt = new String(bytes, StandardCharsets.UTF_8);
-                    logger.info("Start running SQL :: " + sqlStmt);
-                    var executionResult = client.forSql(sqlStmt).withContinueAfterTimeout().execute();
-                    logger.info("SQL result :: " + executionResult.toString());
-                    logger.info("Finished running SQL :: " + sqlStmt);
-                }
-        );
+            logger.info("Found file :: " + f);
+            var bytes = getObjectBytes(s3, migrationsBucketName, f);
+            String sqlStmt = new String(bytes, StandardCharsets.UTF_8);
+            logger.info("Start running SQL :: " + sqlStmt);
+            var executionResult = client.forSql(sqlStmt).withContinueAfterTimeout().execute();
+            logger.info("SQL result :: " + executionResult.toString());
+            logger.info("Finished running SQL :: " + sqlStmt);
+        });
 
 
         s3.close();

@@ -1,6 +1,6 @@
 # appsync-rds-cdk-template
 A starter project for a graphql appsync endpoint with RDS resolvers and a Aurora postgres db
-![AWS AppSync with RDS Resolver](images/AppSync-Aurora.jpg)
+![AWS AppSync with RDS Resolver](docs/images/AppSync-Aurora.jpg)
 
 ## TODO
 1) scripts to run locally with local stack
