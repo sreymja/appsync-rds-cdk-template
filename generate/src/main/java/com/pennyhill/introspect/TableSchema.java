@@ -169,21 +169,4 @@ public class TableSchema {
         private final String name;
         private final String type;
     }
-
-
-//    private static String requestTemplate(Boolean generateId, List<String> sqlQueries) {
-//        var statements = sqlQueries.stream().map(q ->
-//                "        \"" + q + "\""
-//        ).collect(Collectors.joining(",\n"));
-//        var idLine = generateId ? "#set($id=$utils.autoId())\n" : "";
-//        return idLine +
-//                """
-//                        {
-//                            "version": "2018-05-29",
-//                            "statements": [
-//                                %s
-//                            ]
-//                        }
-//                        """.formatted(statements);
-//    }
 }

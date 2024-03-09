@@ -4,3 +4,5 @@
 .idea
 **/cdk.context.json
 /infra/outputs.json
+/infra/app-sync-outputs.json
+**/cdk.out/
