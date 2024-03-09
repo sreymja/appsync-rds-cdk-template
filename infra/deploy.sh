@@ -2,9 +2,6 @@
 
 read -r "?stack prefix [default='']: " prefix
 prefix=${prefix:-''}
-#cdk synth
-
-export AWS_PROFILE=cloud-guru
 
 read -r "?do you need to bootstrap (y/n)? " bootstrap
 if [[ "$bootstrap" =~ ^[Yy]$ ]]
