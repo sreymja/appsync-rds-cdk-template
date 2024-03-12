@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.pennyhill.introspect.Utils.singularCapitalize;
@@ -40,7 +41,8 @@ public class TableSchema {
                 "(input: " + this.className + "CreateInput)",
                 this.className,
                 insertQuery(this),
-                "select * from " + this.name + " where id = '$id'",
+                "select * from " + this.name + " where id = :ID",
+                Map.of(":ID", "$util.toJson($id)"),
                 true);
 
         var update = new Query(
@@ -48,7 +50,8 @@ public class TableSchema {
                 "(" + this.className.toLowerCase() + ": " + this.className + "UpdateInput)",
                 this.className,
                 updateQuery(this),
-                "select * from " + this.name + " where id = '$ctx.args.id'",
+                "select * from " + this.name + " where id = :ID",
+                Map.of(":ID", "$util.toJson($ctx.args.id)"),
                 false);
 
 
@@ -80,13 +83,16 @@ public class TableSchema {
                 "get" + this.className + "ById",
                 "(id: ID!)",
                 this.className,
-                "select * from " + this.name + " where id = '$ctx.args.id'");
+                "select * from " + this.name + " where id = :ID",
+                Map.of(":ID", "$util.toJson($ctx.args.id)"));
 
+//        ":ID": $util.toJson($ctx.args.id),
+//                ":TIME": $util.toJson($ctx.args.time)
         var getAll = new Query(
                 this.name,
                 "",
                 "[" + this.className + "]",
-                "select * from " + this.name);
+                "select * from " + this.name, Map.of());
 
         return List.of(getById, getAll);
     }
@@ -123,14 +129,16 @@ public class TableSchema {
         private final String paramsStr;
         private final String returnTypeStr;
         private final List<String> queries;
+        private final Map<String, String> variables;
         private final Boolean generateId;
-        public Query(String name, String paramsStr, String returnTypeStr, String selectQuery) {
-            this(name, paramsStr, returnTypeStr, null, selectQuery, false);
+        public Query(String name, String paramsStr, String returnTypeStr, String selectQuery, Map<String, String> variables) {
+            this(name, paramsStr, returnTypeStr, null, selectQuery, variables, false);
         }
-        public Query(String name, String paramsStr, String returnTypeStr, String mutateQuery, String selectQuery, Boolean generateId) {
+        public Query(String name, String paramsStr, String returnTypeStr, String mutateQuery, String selectQuery, Map<String, String> variables, Boolean generateId) {
             this.name = name;
             this.paramsStr = paramsStr;
             this.returnTypeStr = returnTypeStr;
+            this.variables = variables;
 
             this.generateId = generateId;
             this.queries = mutateQuery == null ?
@@ -147,6 +155,7 @@ public class TableSchema {
         private final String pkColumnName;
         private final String fkColumnName;
         private final String typeName;
+        private final Map<String, String> variables;
         private final List<String> queries;
 
         public ForeignKey(String pkTableName, String fkTableName, String pkColumnName, String fkColumnName) throws Exception {
@@ -158,8 +167,9 @@ public class TableSchema {
             this.typeName = singularCapitalize(this.pkTableName);
 
 
-            var query = "select * from " + fkTableName + " where " + fkColumnName + " = '$ctx.args.id'";
+            var query = "select * from " + fkTableName + " where " + fkColumnName + " = :ID";
             this.queries = List.of(query);
+            this.variables = Map.of(":ID", "$util.toJson($ctx.args.id)");
         }
     }
 

@@ -18,7 +18,9 @@ public class Resolvers {
                 .typeName("Query")
                 .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
                     #foreach($q in ${query.queries})
-                            "$q"#if( $foreach.hasNext),$newline #end #end))))
+                            "$q"#if( $foreach.hasNext),$newline #end #end), List.of(
+                    #foreach($q in ${query.variables.entrySet()})
+                            "\"${q.key}\":${q.value}"#if( $foreach.hasNext),$newline #end #end))))
                 .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                 .build()#if( $foreach.hasNext ), #end
             #end
@@ -32,7 +34,9 @@ public class Resolvers {
                 .typeName("Mutation")
                 .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
                     #foreach($q in ${query.queries})
-                            "$q"#if( $foreach.hasNext),$newline #end #end))))
+                            "$q"#if( $foreach.hasNext),$newline #end #end), List.of(
+                    #foreach($q in ${query.variables.entrySet()})
+                            "\"${q.key}\":${q.value}"#if( $foreach.hasNext),$newline #end #end))))
                 .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                 .build()#if( $foreach.hasNext ), #end
             #end
@@ -46,7 +50,9 @@ public class Resolvers {
                 .typeName("${relation.typeName}")
                 .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
                     #foreach($query in ${relation.queries})
-                        "$query"#if( $foreach.hasNext), #end #end))))
+                        "$query"#if( $foreach.hasNext), #end #end), List.of(
+                    #foreach($q in ${relation.variables.entrySet()})
+                            "\"${q.key}\":${q.value}"#if( $foreach.hasNext),$newline #end #end))))
                 .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                 .build()#if( $foreach.hasNext), #end
             #end #if( $foreach.hasNext), #end
@@ -58,10 +64,11 @@ public class Resolvers {
                         $responseTemplate
             """;
 
-    public static String requestTemplate(Boolean generateId, List<String> sqlQueries) {
+    public static String requestTemplate(Boolean generateId, List<String> sqlQueries, List<String> variables) {
         var statements = sqlQueries.stream().map(q ->
                 "        \"" + q + "\""
         ).collect(Collectors.joining(",\n"));
+        var variablesMap = String.join(",\n", variables);
         var idLine = generateId ? "#[[#set($id=$utils.autoId())]]#\n" : "";
         return idLine +
                 """
@@ -69,8 +76,11 @@ public class Resolvers {
                             "version": "2018-05-29",
                             "statements": [
                                 %s
-                            ]
+                            ],
+                            "variableMap": {
+                                %s
+                            }
                         }
-                        """.formatted(statements);
+                        """.formatted(statements, variablesMap);
     }
 }
