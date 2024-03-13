@@ -4,19 +4,19 @@ schema {
 }
 
 type Query {
-  getAuditById(id: ID!): Audit
+  getAuditById(id: Int!): [Audit]
   audits: [Audit]
-  getCategoryById(id: ID!): Category
+  getCategoryById(id: Int!): [Category]
   categories: [Category]
-  getCommentById(id: ID!): Comment
+  getCommentById(id: Int!): [Comment]
   comments: [Comment]
-  getPriorityById(id: ID!): Priority
+  getPriorityById(id: Int!): [Priority]
   priorities: [Priority]
-  getStatusById(id: ID!): Status
+  getStatusById(id: Int!): [Status]
   statuses: [Status]
-  getTicketById(id: ID!): Ticket
+  getTicketById(id: Int!): [Ticket]
   tickets: [Ticket]
-  getUserById(id: ID!): User
+  getUserById(id: Int!): [User]
   users: [User]
   getTicketsByStatus(statusId: Int!): [Ticket]
   getTicketsByUser(userId: Int!): [Ticket]
@@ -25,28 +25,28 @@ type Query {
 }
 
 type Mutation {
-  createAudit(input: AuditCreateInput): Audit
-  updateAudit(audit: AuditUpdateInput): Audit
-  createCategory(input: CategoryCreateInput): Category
-  updateCategory(category: CategoryUpdateInput): Category
-  createComment(input: CommentCreateInput): Comment
-  updateComment(comment: CommentUpdateInput): Comment
-  createPriority(input: PriorityCreateInput): Priority
-  updatePriority(priority: PriorityUpdateInput): Priority
-  createStatus(input: StatusCreateInput): Status
-  updateStatus(status: StatusUpdateInput): Status
-  createTicket(input: TicketCreateInput): Ticket
-  updateTicket(ticket: TicketUpdateInput): Ticket
-  createUser(input: UserCreateInput): User
-  updateUser(user: UserUpdateInput): User
-  setStatusOfTicket(id: ID!, statusId: Int!): Ticket
-  setPriorityOfTicket(id: ID!, priorityId: Int!): Ticket
-  setUserOfTicket(id: ID!, userId: Int!): Ticket
-  setCategoryOfTicket(id: ID!, categoryId: Int!): Ticket
+  createAudit(input: AuditCreateInput): [Audit]
+  updateAudit(audit: AuditUpdateInput): [Audit]
+  createCategory(input: CategoryCreateInput): [Category]
+  updateCategory(category: CategoryUpdateInput): [Category]
+  createComment(input: CommentCreateInput): [Comment]
+  updateComment(comment: CommentUpdateInput): [Comment]
+  createPriority(input: PriorityCreateInput): [Priority]
+  updatePriority(priority: PriorityUpdateInput): [Priority]
+  createStatus(input: StatusCreateInput): [Status]
+  updateStatus(status: StatusUpdateInput): [Status]
+  createTicket(input: TicketCreateInput): [Ticket]
+  updateTicket(ticket: TicketUpdateInput): [Ticket]
+  createUser(input: UserCreateInput): [User]
+  updateUser(user: UserUpdateInput): [User]
+  setStatusOfTicket(id: ID!, statusId: Int!): [Ticket]
+  setPriorityOfTicket(id: ID!, priorityId: Int!): [Ticket]
+  setUserOfTicket(id: ID!, userId: Int!): [Ticket]
+  setCategoryOfTicket(id: ID!, categoryId: Int!): [Ticket]
 }
 
 type Audit {
-  id: ID!
+  id: Int!
   operation: String!
   user_id: Int!
   ticket_id: Int!
@@ -55,13 +55,13 @@ type Audit {
 }
 
 type Category {
-  id: ID!
+  id: Int!
   name: String!
   tickets: [Ticket]
 }
 
 type Comment {
-  id: ID!
+  id: Int!
   markdown: String!
   user_id: Int!
   ticket_id: Int!
@@ -70,19 +70,19 @@ type Comment {
 }
 
 type Priority {
-  id: ID!
+  id: Int!
   name: String!
   tickets: [Ticket]
 }
 
 type Status {
-  id: ID!
+  id: Int!
   name: String!
   tickets: [Ticket]
 }
 
 type Ticket {
-  id: ID!
+  id: Int!
   subject: String!
   markdown: String!
   status_id: Int!
@@ -97,7 +97,7 @@ type Ticket {
 }
 
 type User {
-  id: ID!
+  id: Int!
   name: String!
   audits: [Audit]
   comments: [Comment]
@@ -105,7 +105,7 @@ type User {
 }
 
 input AuditUpdateInput {
-  id: ID!
+  id: Int!
   operation: String!
   user_id: Int!
   ticket_id: Int!
@@ -114,12 +114,12 @@ input AuditUpdateInput {
 }
 
 input CategoryUpdateInput {
-  id: ID!
+  id: Int!
   name: String!
 }
 
 input CommentUpdateInput {
-  id: ID!
+  id: Int!
   markdown: String!
   user_id: Int!
   ticket_id: Int!
@@ -128,17 +128,17 @@ input CommentUpdateInput {
 }
 
 input PriorityUpdateInput {
-  id: ID!
+  id: Int!
   name: String!
 }
 
 input StatusUpdateInput {
-  id: ID!
+  id: Int!
   name: String!
 }
 
 input TicketUpdateInput {
-  id: ID!
+  id: Int!
   subject: String!
   markdown: String!
   status_id: Int!
@@ -151,7 +151,7 @@ input TicketUpdateInput {
 }
 
 input UserUpdateInput {
-  id: ID!
+  id: Int!
   name: String!
 }
 

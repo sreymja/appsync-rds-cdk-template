@@ -52,4 +52,22 @@ public class ResolversTest {
 //
 //    }
 
+//        @Test
+//    public void requestTemplateResolverStringAsExpected_Relation() throws JSONException {
+//        var actual = requestTemplate(false, List.of(
+//                "select * from audits where ticket_id = :ID" ), List.of(
+//                """
+//                        ":ID":$util.toJson($ctx.args.id)
+//                        },
+//                        "variableTypeHintMap": {
+//                                ":id": "DECIMAL"
+//                        """
+//                 ));
+////        var expected = "";
+////        JSONAssert.assertEquals(expected
+////                , actual, JSONCompareMode.LENIENT);
+//            assertThat(actual).isEqualTo("");
+//
+//    }
+
 }

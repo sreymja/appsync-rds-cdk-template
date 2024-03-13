@@ -2,7 +2,7 @@
 npx @aws-amplify/cli codegen add --apiId <...> --region <...>
 ```
 ```shell
-export AWS_PROFILE=cloud-guru && npx @aws-amplify/cli codegen add --apiId cwuurpwp4vc75nnqo2tzmn5wea --region us-east-1
+npx @aws-amplify/cli codegen add --apiId cwuurpwp4vc75nnqo2tzmn5wea --region us-east-1
 ```
 
 

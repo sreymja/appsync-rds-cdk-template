@@ -30,6 +30,10 @@ public class AppSyncStack extends Stack {
                                         .build())
                                 .build())
                         .build())
+                .logConfig(LogConfig.builder()
+                        .fieldLogLevel(FieldLogLevel.ALL)
+                        .excludeVerboseContent(false)
+                        .build())
                 .build());
 
         RdsDataSource ds = api.addRdsDataSource(dsId, props.getCluster(), props.getRdsSecret(), props.getDbName());

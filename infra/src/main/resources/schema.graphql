@@ -6,10 +6,10 @@ type Query {
 }
 
 type Mutation {
-    setStatusOfTicket(id: ID!, statusId: Int!): Ticket
-    setPriorityOfTicket(id: ID!, priorityId: Int!): Ticket
-    setUserOfTicket(id: ID!, userId: Int!): Ticket
-    setCategoryOfTicket(id: ID!, categoryId: Int!): Ticket
+    setStatusOfTicket(id: ID!, statusId: Int!): [Ticket]
+    setPriorityOfTicket(id: ID!, priorityId: Int!): [Ticket]
+    setUserOfTicket(id: ID!, userId: Int!): [Ticket]
+    setCategoryOfTicket(id: ID!, categoryId: Int!): [Ticket]
 }
 
 

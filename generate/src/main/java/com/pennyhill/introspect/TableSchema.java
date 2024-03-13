@@ -39,7 +39,7 @@ public class TableSchema {
         var create = new Query(
                 "create" + this.className,
                 "(input: " + this.className + "CreateInput)",
-                this.className,
+                "[" + this.className + "]",
                 insertQuery(this),
                 "select * from " + this.name + " where id = :ID",
                 Map.of(":ID", "$util.toJson($id)"),
@@ -48,7 +48,7 @@ public class TableSchema {
         var update = new Query(
                 "update" + this.className,
                 "(" + this.className.toLowerCase() + ": " + this.className + "UpdateInput)",
-                this.className,
+                "[" + this.className + "]",
                 updateQuery(this),
                 "select * from " + this.name + " where id = :ID",
                 Map.of(":ID", "$util.toJson($ctx.args.id)"),
@@ -81,8 +81,8 @@ public class TableSchema {
     private List<Query> generateQueries() {
         var getById = new Query(
                 "get" + this.className + "ById",
-                "(id: ID!)",
-                this.className,
+                "(id: Int!)",
+                "[" + this.className + "]",
                 "select * from " + this.name + " where id = :ID",
                 Map.of(":ID", "$util.toJson($ctx.args.id)"));
 
@@ -108,8 +108,7 @@ public class TableSchema {
             this.sqlType = sqlType;
             switch (sqlType) {
                 case "int4":
-                    if (name.equals("id")) this.type = "ID";
-                    else this.type = "Int";
+                    this.type = "Int";
                     break;
                 case "varchar", "timestamp":
                     this.type = "String";
