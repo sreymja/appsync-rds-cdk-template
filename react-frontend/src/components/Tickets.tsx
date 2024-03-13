@@ -1,7 +1,7 @@
 import { generateClient } from 'aws-amplify/api';
 import * as queries from '../graphql/queries';
 import * as React from 'react';
-import Link from '@mui/material/Link';
+import {Link} from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,6 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 import {useEffect, useState} from "react";
 import {Ticket} from "../API";
+import EditIcon from '@mui/icons-material/Edit';
 
 
 
@@ -30,7 +31,7 @@ export default function Tickets() {
     };
     useEffect(() => {
         getTickets()
-    })
+    }, [])
 
     return (
         <React.Fragment>
@@ -49,6 +50,7 @@ export default function Tickets() {
                             <TableCell>{row?.id}</TableCell>
                             <TableCell>{row?.subject}</TableCell>
                             <TableCell>{row?.created_at}</TableCell>
+                            <TableCell><Link to={`ticket/${row?.id}`}><EditIcon/></Link></TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
