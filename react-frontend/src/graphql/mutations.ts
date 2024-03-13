@@ -45,7 +45,7 @@ export const createCategory = /* GraphQL */ `mutation CreateCategory($input: Cat
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -69,7 +69,7 @@ export const updateCategory = /* GraphQL */ `mutation UpdateCategory($category: 
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -89,7 +89,7 @@ export const updateCategory = /* GraphQL */ `mutation UpdateCategory($category: 
 export const createComment = /* GraphQL */ `mutation CreateComment($input: CommentCreateInput) {
   createComment(input: $input) {
     id
-    markdown
+    content
     user_id
     ticket_id
     created_at
@@ -104,7 +104,7 @@ export const createComment = /* GraphQL */ `mutation CreateComment($input: Comme
 export const updateComment = /* GraphQL */ `mutation UpdateComment($comment: CommentUpdateInput) {
   updateComment(comment: $comment) {
     id
-    markdown
+    content
     user_id
     ticket_id
     created_at
@@ -123,7 +123,7 @@ export const createPriority = /* GraphQL */ `mutation CreatePriority($input: Pri
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -147,7 +147,7 @@ export const updatePriority = /* GraphQL */ `mutation UpdatePriority($priority: 
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -171,7 +171,7 @@ export const createStatus = /* GraphQL */ `mutation CreateStatus($input: StatusC
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -195,7 +195,7 @@ export const updateStatus = /* GraphQL */ `mutation UpdateStatus($status: Status
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -216,7 +216,7 @@ export const createTicket = /* GraphQL */ `mutation CreateTicket($input: TicketC
   createTicket(input: $input) {
     id
     subject
-    markdown
+    content
     status_id
     priority_id
     user_id
@@ -235,7 +235,7 @@ export const createTicket = /* GraphQL */ `mutation CreateTicket($input: TicketC
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -253,7 +253,7 @@ export const updateTicket = /* GraphQL */ `mutation UpdateTicket($ticket: Ticket
   updateTicket(ticket: $ticket) {
     id
     subject
-    markdown
+    content
     status_id
     priority_id
     user_id
@@ -272,7 +272,7 @@ export const updateTicket = /* GraphQL */ `mutation UpdateTicket($ticket: Ticket
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -301,7 +301,7 @@ export const createUser = /* GraphQL */ `mutation CreateUser($input: UserCreateI
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -311,7 +311,7 @@ export const createUser = /* GraphQL */ `mutation CreateUser($input: UserCreateI
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -343,7 +343,7 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser($user: UserUpdateIn
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -353,7 +353,7 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser($user: UserUpdateIn
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -374,7 +374,7 @@ export const setStatusOfTicket = /* GraphQL */ `mutation SetStatusOfTicket($id: 
   setStatusOfTicket(id: $id, statusId: $statusId) {
     id
     subject
-    markdown
+    content
     status_id
     priority_id
     user_id
@@ -393,7 +393,7 @@ export const setStatusOfTicket = /* GraphQL */ `mutation SetStatusOfTicket($id: 
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -411,7 +411,7 @@ export const setPriorityOfTicket = /* GraphQL */ `mutation SetPriorityOfTicket($
   setPriorityOfTicket(id: $id, priorityId: $priorityId) {
     id
     subject
-    markdown
+    content
     status_id
     priority_id
     user_id
@@ -430,7 +430,7 @@ export const setPriorityOfTicket = /* GraphQL */ `mutation SetPriorityOfTicket($
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -448,7 +448,7 @@ export const setUserOfTicket = /* GraphQL */ `mutation SetUserOfTicket($id: ID!,
   setUserOfTicket(id: $id, userId: $userId) {
     id
     subject
-    markdown
+    content
     status_id
     priority_id
     user_id
@@ -467,7 +467,7 @@ export const setUserOfTicket = /* GraphQL */ `mutation SetUserOfTicket($id: ID!,
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -485,7 +485,7 @@ export const setCategoryOfTicket = /* GraphQL */ `mutation SetCategoryOfTicket($
   setCategoryOfTicket(id: $id, categoryId: $categoryId) {
     id
     subject
-    markdown
+    content
     status_id
     priority_id
     user_id
@@ -504,7 +504,7 @@ export const setCategoryOfTicket = /* GraphQL */ `mutation SetCategoryOfTicket($
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at

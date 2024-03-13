@@ -62,7 +62,7 @@ type Category {
 
 type Comment {
   id: Int!
-  markdown: String!
+  content: String!
   user_id: Int!
   ticket_id: Int!
   created_at: String!
@@ -84,7 +84,7 @@ type Status {
 type Ticket {
   id: Int!
   subject: String!
-  markdown: String!
+  content: String!
   status_id: Int!
   priority_id: Int!
   user_id: Int!
@@ -120,7 +120,7 @@ input CategoryUpdateInput {
 
 input CommentUpdateInput {
   id: Int!
-  markdown: String!
+  content: String!
   user_id: Int!
   ticket_id: Int!
   created_at: String!
@@ -140,7 +140,7 @@ input StatusUpdateInput {
 input TicketUpdateInput {
   id: Int!
   subject: String!
-  markdown: String!
+  content: String!
   status_id: Int!
   priority_id: Int!
   user_id: Int!
@@ -168,7 +168,7 @@ input CategoryCreateInput {
 }
 
 input CommentCreateInput {
-  markdown: String!
+  content: String!
   user_id: Int!
   ticket_id: Int!
   created_at: String!
@@ -185,7 +185,7 @@ input StatusCreateInput {
 
 input TicketCreateInput {
   subject: String!
-  markdown: String!
+  content: String!
   status_id: Int!
   priority_id: Int!
   user_id: Int!

@@ -20,11 +20,6 @@ export default function Tickets() {
         const client = generateClient()
         const result = await client.graphql({
             query: queries.tickets,
-            // variables: { input: todoDetails }
-            // variables: {
-            //     // Fetch first 20 records
-            //     limit: 20
-            // }
         });
         // @ts-ignore
         setTickets(result.data.tickets)

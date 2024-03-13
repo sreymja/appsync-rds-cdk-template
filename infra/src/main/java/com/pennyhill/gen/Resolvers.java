@@ -165,7 +165,7 @@ public class Resolvers {
                 .fieldName("createComment")
                 .typeName("Mutation")
                 .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
-                            "insert into tickets(id, markdown, user_id, ticket_id, created_at, updated_at) values ('$id', '$ctx.args.input.id', '$ctx.args.input.markdown', '$ctx.args.input.user_id', '$ctx.args.input.ticket_id', '$ctx.args.input.created_at', '$ctx.args.input.updated_at');",
+                            "insert into tickets(id, content, user_id, ticket_id, created_at, updated_at) values ('$id', '$ctx.args.input.id', '$ctx.args.input.content', '$ctx.args.input.user_id', '$ctx.args.input.ticket_id', '$ctx.args.input.created_at', '$ctx.args.input.updated_at');",
                               "select * from comments where id = :ID" ), List.of(
                             "\":ID\":$util.toJson($id)" ))))
                 .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
@@ -174,7 +174,7 @@ public class Resolvers {
                 .fieldName("updateComment")
                 .typeName("Mutation")
                 .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
-                            "update comments set id = '$ctx.args.comment.id', markdown = '$ctx.args.comment.markdown', user_id = '$ctx.args.comment.user_id', ticket_id = '$ctx.args.comment.ticket_id', created_at = '$ctx.args.comment.created_at', updated_at = '$ctx.args.comment.updated_at' where id = '$ctx.args.id';",
+                            "update comments set id = '$ctx.args.comment.id', content = '$ctx.args.comment.content', user_id = '$ctx.args.comment.user_id', ticket_id = '$ctx.args.comment.ticket_id', created_at = '$ctx.args.comment.created_at', updated_at = '$ctx.args.comment.updated_at' where id = '$ctx.args.id';",
                               "select * from comments where id = :ID" ), List.of(
                             "\":ID\":$util.toJson($ctx.args.id)" ))))
                 .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
@@ -219,7 +219,7 @@ public class Resolvers {
                 .fieldName("createTicket")
                 .typeName("Mutation")
                 .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
-                            "insert into tickets(id, subject, markdown, status_id, priority_id, user_id, category_id, created_at, updated_at, completed_at) values ('$id', '$ctx.args.input.id', '$ctx.args.input.subject', '$ctx.args.input.markdown', '$ctx.args.input.status_id', '$ctx.args.input.priority_id', '$ctx.args.input.user_id', '$ctx.args.input.category_id', '$ctx.args.input.created_at', '$ctx.args.input.updated_at', '$ctx.args.input.completed_at');",
+                            "insert into tickets(id, subject, content, status_id, priority_id, user_id, category_id, created_at, updated_at, completed_at) values ('$id', '$ctx.args.input.id', '$ctx.args.input.subject', '$ctx.args.input.content', '$ctx.args.input.status_id', '$ctx.args.input.priority_id', '$ctx.args.input.user_id', '$ctx.args.input.category_id', '$ctx.args.input.created_at', '$ctx.args.input.updated_at', '$ctx.args.input.completed_at');",
                               "select * from tickets where id = :ID" ), List.of(
                             "\":ID\":$util.toJson($id)" ))))
                 .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
@@ -228,7 +228,7 @@ public class Resolvers {
                 .fieldName("updateTicket")
                 .typeName("Mutation")
                 .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
-                            "update tickets set id = '$ctx.args.ticket.id', subject = '$ctx.args.ticket.subject', markdown = '$ctx.args.ticket.markdown', status_id = '$ctx.args.ticket.status_id', priority_id = '$ctx.args.ticket.priority_id', user_id = '$ctx.args.ticket.user_id', category_id = '$ctx.args.ticket.category_id', created_at = '$ctx.args.ticket.created_at', updated_at = '$ctx.args.ticket.updated_at', completed_at = '$ctx.args.ticket.completed_at' where id = '$ctx.args.id';",
+                            "update tickets set id = '$ctx.args.ticket.id', subject = '$ctx.args.ticket.subject', content = '$ctx.args.ticket.content', status_id = '$ctx.args.ticket.status_id', priority_id = '$ctx.args.ticket.priority_id', user_id = '$ctx.args.ticket.user_id', category_id = '$ctx.args.ticket.category_id', created_at = '$ctx.args.ticket.created_at', updated_at = '$ctx.args.ticket.updated_at', completed_at = '$ctx.args.ticket.completed_at' where id = '$ctx.args.id';",
                               "select * from tickets where id = :ID" ), List.of(
                             "\":ID\":$util.toJson($ctx.args.id)" ))))
                 .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))

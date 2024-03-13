@@ -5,10 +5,8 @@ import {generateClient} from "aws-amplify/api";
 import {Ticket} from "../API";
 import {getTicketById} from "../graphql/queries";
 import Box from "@mui/material/Box";
-import MDEditor from '@uiw/react-md-editor';
 
 export default function TicketComponent (){
-    const [value, setValue] = useState<string>();
     const params = useParams();
     const client = generateClient();
     const [ticket, setTicket] = useState<Ticket>()
@@ -20,9 +18,6 @@ export default function TicketComponent (){
         });
         // @ts-ignore
         setTicket(result.data.getTicketById[0])
-        if (result.data.getTicketById) {
-            setValue(result.data.getTicketById[0]?.markdown || "")
-        }
     }
 
     useEffect(() => {
@@ -46,11 +41,7 @@ export default function TicketComponent (){
         >
             <FormControl>
                 <TextField defaultValue={ticket?.subject} label={"Subject"} inputProps={{shrink: true}}></TextField>
-                <TextField multiline={true} minRows={20} defaultValue={value} label={"Content"}
-                           onChange={(event) => setValue(event.target.value || "")}
-                           inputProps={{shrink: true}}></TextField>
-
-                <MDEditor.Markdown source={value} style={{whiteSpace: 'pre-wrap'}}/>
+                <TextField multiline={true} minRows={20} defaultValue={ticket?.content} label={"Content"} inputProps={{shrink: true}}></TextField>
             </FormControl>
         </Box>
     );

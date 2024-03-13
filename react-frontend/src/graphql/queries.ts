@@ -42,7 +42,7 @@ export const getCategoryById = /* GraphQL */ `query GetCategoryById($id: Int!) {
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -66,7 +66,7 @@ export const categories = /* GraphQL */ `query Categories {
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -86,7 +86,7 @@ export const categories = /* GraphQL */ `query Categories {
 export const getCommentById = /* GraphQL */ `query GetCommentById($id: Int!) {
   getCommentById(id: $id) {
     id
-    markdown
+    content
     user_id
     ticket_id
     created_at
@@ -101,7 +101,7 @@ export const getCommentById = /* GraphQL */ `query GetCommentById($id: Int!) {
 export const comments = /* GraphQL */ `query Comments {
   comments {
     id
-    markdown
+    content
     user_id
     ticket_id
     created_at
@@ -117,7 +117,7 @@ export const getPriorityById = /* GraphQL */ `query GetPriorityById($id: Int!) {
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -141,7 +141,7 @@ export const priorities = /* GraphQL */ `query Priorities {
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -165,7 +165,7 @@ export const getStatusById = /* GraphQL */ `query GetStatusById($id: Int!) {
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -189,7 +189,7 @@ export const statuses = /* GraphQL */ `query Statuses {
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -207,7 +207,7 @@ export const getTicketById = /* GraphQL */ `query GetTicketById($id: Int!) {
   getTicketById(id: $id) {
     id
     subject
-    markdown
+    content
     status_id
     priority_id
     user_id
@@ -226,7 +226,7 @@ export const getTicketById = /* GraphQL */ `query GetTicketById($id: Int!) {
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -244,7 +244,7 @@ export const tickets = /* GraphQL */ `query Tickets {
   tickets {
     id
     subject
-    markdown
+    content
     status_id
     priority_id
     user_id
@@ -263,7 +263,7 @@ export const tickets = /* GraphQL */ `query Tickets {
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -289,7 +289,7 @@ export const getUserById = /* GraphQL */ `query GetUserById($id: Int!) {
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -299,7 +299,7 @@ export const getUserById = /* GraphQL */ `query GetUserById($id: Int!) {
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -331,7 +331,7 @@ export const users = /* GraphQL */ `query Users {
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -341,7 +341,7 @@ export const users = /* GraphQL */ `query Users {
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id
@@ -359,7 +359,7 @@ export const getTicketsByStatus = /* GraphQL */ `query GetTicketsByStatus($statu
   getTicketsByStatus(statusId: $statusId) {
     id
     subject
-    markdown
+    content
     status_id
     priority_id
     user_id
@@ -378,7 +378,7 @@ export const getTicketsByStatus = /* GraphQL */ `query GetTicketsByStatus($statu
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -396,7 +396,7 @@ export const getTicketsByUser = /* GraphQL */ `query GetTicketsByUser($userId: I
   getTicketsByUser(userId: $userId) {
     id
     subject
-    markdown
+    content
     status_id
     priority_id
     user_id
@@ -415,7 +415,7 @@ export const getTicketsByUser = /* GraphQL */ `query GetTicketsByUser($userId: I
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -433,7 +433,7 @@ export const getTicketsByCategory = /* GraphQL */ `query GetTicketsByCategory($c
   getTicketsByCategory(categoryId: $categoryId) {
     id
     subject
-    markdown
+    content
     status_id
     priority_id
     user_id
@@ -452,7 +452,7 @@ export const getTicketsByCategory = /* GraphQL */ `query GetTicketsByCategory($c
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -481,7 +481,7 @@ export const searchUserByName = /* GraphQL */ `query SearchUserByName($name: Str
     }
     comments {
       id
-      markdown
+      content
       user_id
       ticket_id
       created_at
@@ -491,7 +491,7 @@ export const searchUserByName = /* GraphQL */ `query SearchUserByName($name: Str
     tickets {
       id
       subject
-      markdown
+      content
       status_id
       priority_id
       user_id

@@ -26,7 +26,7 @@ create table if not exists tickets
 (
     id           int primary key generated always as identity,
     subject      varchar   not null,
-    markdown     varchar   not null,
+    content      varchar   not null,
     status_id    int       not null,
     priority_id  int       not null,
     user_id      int       not null,
@@ -55,7 +55,7 @@ create table if not exists audits
 create table if not exists comments
 (
     id         int primary key generated always as identity,
-    markdown   varchar   not null,
+    content    varchar   not null,
     user_id    int       not null,
     ticket_id  int       not null,
     created_at timestamp not null DEFAULT Now(),
@@ -68,9 +68,9 @@ insert into statuses (name) values ('created'), ('open'), ('closed');
 insert into priorities (name) values ('high'), ('standard'), ('low');
 insert into users (name) values ('adam'), ('admin');
 insert into categories (name) values('task'), ('story'), ('chore');insert into tickets (subject,
-                     markdown,
+                     content,
                      status_id,
                      priority_id,
                      user_id,
                      category_id)
-values ('test ticket', '', 1, 1, 1, 1)
+values ('test ticket', 'test content', 1, 1, 1, 1);
