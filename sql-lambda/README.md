@@ -1,18 +1,4 @@
-
-
-# TODO
-
-- s3 sync with migrations folder on deploy
-- s3 write triggers activation of migration lambda
-- migration lambda checks for existence of migration table.
-  - if no create table
-  - if yes check folder contents against applied migrations
-- apply all un-applied migrations in folder
-- add newly applied records to migrations table
-- do them one at a time in a single transaction per migration & table update
-
-### infra for above
-- s3 bucket (put in it's own stack)
-- trigger for s3 bucket *** not yet done ***
-- lambda
-- rds cluster
+# sql-lambda
+Lambda for deploying sql scripts to RDS. Scripts are uploaded to s3 bucket which raise an event
+which triggers the lambda. The lambda runs the file(s) found in the event details. For examples of usage
+see the deploy.sh file in the infra folder and the load-data.sh file in the sql-scripts folder.
