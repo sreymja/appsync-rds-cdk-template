@@ -245,7 +245,7 @@ export default function TicketComponent() {
                 <Box sx={{borderBottom: 1, borderColor: 'divider', width: '75ch'}}>
                     <Tabs value={tabIndex} onChange={handleChange} aria-label="basic tabs example">
                         <Tab label="Detail" {...a11yProps(0)} />
-                        <Tab label="Comments" {...a11yProps(1)} />
+                        {ticket?.id !== 0 && <Tab label="Comments" {...a11yProps(1)} />}
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={tabIndex} index={0}>
