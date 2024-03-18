@@ -17,6 +17,7 @@ import {AppBarProps as MuiAppBarProps} from "@mui/material/AppBar/AppBar";
 import Link from "@mui/material/Link";
 import MuiDrawer from "@mui/material/Drawer";
 import {Outlet} from "react-router-dom";
+import NavList from "./NavList";
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -81,7 +82,7 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 export default function Layout() {
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
     const toggleDrawer = () => {
         setOpen(!open);
     };
@@ -139,8 +140,9 @@ export default function Layout() {
                 </Toolbar>
                 <Divider />
                 <List component="nav">
+                    <NavList />
                     {/*{mainListItems}*/}
-                    <Divider sx={{ my: 1 }} />
+                    {/*<Divider sx={{ my: 1 }} />*/}
                     {/*{secondaryListItems}*/}
                 </List>
             </Drawer>

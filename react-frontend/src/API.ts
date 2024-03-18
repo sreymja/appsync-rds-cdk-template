@@ -180,7 +180,7 @@ export type CreateAuditMutation = {
 };
 
 export type UpdateAuditMutationVariables = {
-  audit?: AuditUpdateInput | null,
+  input?: AuditUpdateInput | null,
 };
 
 export type UpdateAuditMutation = {
@@ -221,7 +221,7 @@ export type CreateCategoryMutation = {
 };
 
 export type UpdateCategoryMutationVariables = {
-  category?: CategoryUpdateInput | null,
+  input?: CategoryUpdateInput | null,
 };
 
 export type UpdateCategoryMutation = {
@@ -262,7 +262,7 @@ export type CreateCommentMutation = {
 };
 
 export type UpdateCommentMutationVariables = {
-  comment?: CommentUpdateInput | null,
+  input?: CommentUpdateInput | null,
 };
 
 export type UpdateCommentMutation = {
@@ -303,7 +303,7 @@ export type CreatePriorityMutation = {
 };
 
 export type UpdatePriorityMutationVariables = {
-  priority?: PriorityUpdateInput | null,
+  input?: PriorityUpdateInput | null,
 };
 
 export type UpdatePriorityMutation = {
@@ -353,7 +353,7 @@ export type CreateStatusMutation = {
 };
 
 export type UpdateStatusMutationVariables = {
-  status?: StatusUpdateInput | null,
+  input?: StatusUpdateInput | null,
 };
 
 export type UpdateStatusMutation = {
@@ -416,7 +416,7 @@ export type CreateTicketMutation = {
 };
 
 export type UpdateTicketMutationVariables = {
-  ticket?: TicketUpdateInput | null,
+  input?: TicketUpdateInput | null,
 };
 
 export type UpdateTicketMutation = {
@@ -497,7 +497,7 @@ export type CreateUserMutation = {
 };
 
 export type UpdateUserMutationVariables = {
-  user?: UserUpdateInput | null,
+  input?: UserUpdateInput | null,
 };
 
 export type UpdateUserMutation = {

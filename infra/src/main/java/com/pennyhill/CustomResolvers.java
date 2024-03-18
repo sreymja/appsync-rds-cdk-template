@@ -17,7 +17,7 @@ public class CustomResolvers {
                         .typeName("Query")
                         .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
                                 "select * from tickets where status_id = :ID" ), List.of(
-                                "':ID': $util.toJson($ctx.args.statusId)" ))))
+                                "\":ID\": $util.toJson($ctx.args.statusId)" ))))
                         .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                         .build(),
                 BaseResolverProps.builder()
@@ -25,7 +25,7 @@ public class CustomResolvers {
                         .typeName("Query")
                         .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
                                 "select * from tickets where user_id = :ID" ), List.of(
-                                "':ID': $util.toJson($ctx.args.userId)" ))))
+                                "\":ID\": $util.toJson($ctx.args.userId)" ))))
                         .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                         .build(),
                 BaseResolverProps.builder()
@@ -33,7 +33,7 @@ public class CustomResolvers {
                         .typeName("Query")
                         .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
                                 "select * from tickets where category_id = :ID" ), List.of(
-                                "':ID': $util.toJson($ctx.args.categoryId)" ))))
+                                "\":ID\": $util.toJson($ctx.args.categoryId)" ))))
                         .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                         .build(),
                 BaseResolverProps.builder()
@@ -41,7 +41,7 @@ public class CustomResolvers {
                         .typeName("Query")
                         .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
                                 "select * from users where name like = '%:NAME%'" ), List.of(
-                                "':NAME': $util.toJson($ctx.args.name)" ))))
+                                "\":NAME\": $util.toJson($ctx.args.name)" ))))
                         .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                         .build(),
                 // Mutations
@@ -49,36 +49,40 @@ public class CustomResolvers {
                         .fieldName("setStatusOfTicket")
                         .typeName("Mutation")
                         .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
-                                "update tickets set status_id = '$ctx.args.statusId' where id = :ID",
+                                "update tickets set status_id = :STATUSID where id = :ID",
                                 "select * from tickets where id = :ID" ), List.of(
-                                "':ID': $util.toJson($ctx.args.id)" ))))
+                                "\":ID\": $util.toJson($ctx.args.id)",
+                                "\":STATUSID\": $util.toJson($ctx.args.statusId)"))))
                         .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                         .build(),
                 BaseResolverProps.builder()
                         .fieldName("setPriorityOfTicket")
                         .typeName("Mutation")
                         .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
-                                "update tickets set priority_id = '$ctx.args.priorityId' where id = :ID",
+                                "update tickets set priority_id = :PRIORITYID where id = :ID",
                                 "select * from tickets where id = :ID" ), List.of(
-                                "':ID': $util.toJson($ctx.args.id)" ))))
+                                "\":ID\": $util.toJson($ctx.args.id)",
+                                "\":PRIORITYID\": $util.toJson($ctx.args.priorityId)" ))))
                         .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                         .build(),
                 BaseResolverProps.builder()
                         .fieldName("setUserOfTicket")
                         .typeName("Mutation")
                         .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
-                                "update tickets set user_id = '$ctx.args.userId' where id = :ID",
+                                "update tickets set user_id = :USERID where id = :ID",
                                 "select * from tickets where id = :ID" ), List.of(
-                                "':ID': $util.toJson($ctx.args.id)" ))))
+                                "\":ID\": $util.toJson($ctx.args.id)",
+                                "\":USERID\": $util.toJson($ctx.args.userId)" ))))
                         .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                         .build(),
                 BaseResolverProps.builder()
                         .fieldName("setCategoryOfTicket")
                         .typeName("Mutation")
                         .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
-                                "update tickets set category_id = '$ctx.args.categoryId' where id = :ID",
+                                "update tickets set category_id = :CATEGORYID where id = :ID",
                                 "select * from tickets where id = :ID" ), List.of(
-                                "':ID': $util.toJson($ctx.args.:ID)" ))))
+                                "\":ID\": $util.toJson($ctx.args.:ID)",
+                                "\":CATEGORYID\": $util.toJson($ctx.args.categoryId)" ))))
                         .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                         .build()
         );

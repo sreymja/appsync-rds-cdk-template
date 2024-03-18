@@ -43,6 +43,8 @@ public class Main {
         var schemas = getTableSchemas();
         context.put("schemas", schemas);
         context.put("responseTemplate", TableSchema.RESPONSE_TEMPLATE);
+        context.put("updateTemplate", TableSchema.UPDATE_TEMPLATE);
+        context.put("insertTemplate", TableSchema.INSERT_TEMPLATE);
         context.put("schemasWithFk", schemas.stream().filter(s -> !s.getForeignKeys().isEmpty()).toList());
         context.put("newline", "\n");
 

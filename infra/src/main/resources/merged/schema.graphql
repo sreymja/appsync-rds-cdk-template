@@ -25,20 +25,20 @@ type Query {
 }
 
 type Mutation {
-  createAudit(input: AuditCreateInput): [Audit]
-  updateAudit(audit: AuditUpdateInput): [Audit]
-  createCategory(input: CategoryCreateInput): [Category]
-  updateCategory(category: CategoryUpdateInput): [Category]
-  createComment(input: CommentCreateInput): [Comment]
-  updateComment(comment: CommentUpdateInput): [Comment]
-  createPriority(input: PriorityCreateInput): [Priority]
-  updatePriority(priority: PriorityUpdateInput): [Priority]
-  createStatus(input: StatusCreateInput): [Status]
-  updateStatus(status: StatusUpdateInput): [Status]
-  createTicket(input: TicketCreateInput): [Ticket]
-  updateTicket(ticket: TicketUpdateInput): [Ticket]
-  createUser(input: UserCreateInput): [User]
-  updateUser(user: UserUpdateInput): [User]
+  createAudit(input: AuditCreateInput): Audit
+  updateAudit(input: AuditUpdateInput): Audit
+  createCategory(input: CategoryCreateInput): Category
+  updateCategory(input: CategoryUpdateInput): Category
+  createComment(input: CommentCreateInput): Comment
+  updateComment(input: CommentUpdateInput): Comment
+  createPriority(input: PriorityCreateInput): Priority
+  updatePriority(input: PriorityUpdateInput): Priority
+  createStatus(input: StatusCreateInput): Status
+  updateStatus(input: StatusUpdateInput): Status
+  createTicket(input: TicketCreateInput): Ticket
+  updateTicket(input: TicketUpdateInput): Ticket
+  createUser(input: UserCreateInput): User
+  updateUser(input: UserUpdateInput): User
   setStatusOfTicket(id: ID!, statusId: Int!): [Ticket]
   setPriorityOfTicket(id: ID!, priorityId: Int!): [Ticket]
   setUserOfTicket(id: ID!, userId: Int!): [Ticket]

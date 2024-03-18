@@ -1,24 +1,24 @@
 create table if not exists statuses
 (
-    id   int primary key generated always as identity,
+    id   int primary key not null,
     name varchar not null
 );
 
 create table if not exists priorities
 (
-    id   int primary key generated always as identity,
+    id   int primary key not null,
     name varchar not null
 );
 
 create table if not exists users
 (
-    id   int primary key generated always as identity,
+    id   int primary key not null,
     name varchar not null
 );
 
 create table if not exists categories
 (
-    id   int primary key generated always as identity,
+    id   int primary key not null,
     name varchar not null
 );
 
@@ -63,4 +63,30 @@ create table if not exists comments
     foreign key (user_id) references users (id) on delete restrict,
     foreign key (ticket_id) references tickets (id) on delete restrict
 );
+
+CREATE FUNCTION trigger_set_timestamp()
+    RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER set_timestamp_tickets
+    BEFORE
+        UPDATE ON tickets
+    FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+
+CREATE TRIGGER set_timestamp_audits
+    BEFORE
+        UPDATE ON audits
+    FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+
+CREATE TRIGGER set_timestamp_comments
+    BEFORE
+        UPDATE ON comments
+    FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
 

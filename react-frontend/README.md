@@ -1,4 +1,8 @@
 ```shell
+./generate-schema.sh
+```
+
+```shell
 npx @aws-amplify/cli codegen add --apiId <...> --region <...>
 ```
 ```shell

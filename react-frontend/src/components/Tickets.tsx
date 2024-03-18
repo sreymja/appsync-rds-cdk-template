@@ -11,6 +11,11 @@ import Title from './Title';
 import {useEffect, useState} from "react";
 import {Ticket} from "../API";
 import EditIcon from '@mui/icons-material/Edit';
+import PriorityIcon from "./PriorityIcon";
+import CategoryIcon from "./CategoryIcon";
+import renderDate from "../utils/render-date";
+import status from "../utils/status";
+
 
 
 
@@ -34,17 +39,26 @@ export default function Tickets() {
             <Table size="small">
                 <TableHead>
                     <TableRow>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell>Status</TableCell>
                         <TableCell>Id</TableCell>
                         <TableCell>Subject</TableCell>
                         <TableCell>Created</TableCell>
+                        <TableCell>Updated</TableCell>
+                        <TableCell></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {tickets?.map((row) => (
                         <TableRow key={row?.id}>
+                            <TableCell><PriorityIcon id={row?.priority_id}/></TableCell>
+                            <TableCell><CategoryIcon id={row?.category_id}/></TableCell>
+                            <TableCell>{status(row?.status_id || 0)}</TableCell>
                             <TableCell>{row?.id}</TableCell>
                             <TableCell>{row?.subject}</TableCell>
-                            <TableCell>{row?.created_at}</TableCell>
+                            <TableCell>{renderDate(row?.created_at)}</TableCell>
+                            <TableCell>{renderDate(row?.updated_at)}</TableCell>
                             <TableCell><Link to={`ticket/${row?.id}`}><EditIcon/></Link></TableCell>
                         </TableRow>
                     ))}

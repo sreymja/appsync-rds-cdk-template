@@ -23,8 +23,8 @@ export const createAudit = /* GraphQL */ `mutation CreateAudit($input: AuditCrea
   APITypes.CreateAuditMutationVariables,
   APITypes.CreateAuditMutation
 >;
-export const updateAudit = /* GraphQL */ `mutation UpdateAudit($audit: AuditUpdateInput) {
-  updateAudit(audit: $audit) {
+export const updateAudit = /* GraphQL */ `mutation UpdateAudit($input: AuditUpdateInput) {
+  updateAudit(input: $input) {
     id
     operation
     user_id
@@ -62,8 +62,8 @@ export const createCategory = /* GraphQL */ `mutation CreateCategory($input: Cat
   APITypes.CreateCategoryMutationVariables,
   APITypes.CreateCategoryMutation
 >;
-export const updateCategory = /* GraphQL */ `mutation UpdateCategory($category: CategoryUpdateInput) {
-  updateCategory(category: $category) {
+export const updateCategory = /* GraphQL */ `mutation UpdateCategory($input: CategoryUpdateInput) {
+  updateCategory(input: $input) {
     id
     name
     tickets {
@@ -101,8 +101,8 @@ export const createComment = /* GraphQL */ `mutation CreateComment($input: Comme
   APITypes.CreateCommentMutationVariables,
   APITypes.CreateCommentMutation
 >;
-export const updateComment = /* GraphQL */ `mutation UpdateComment($comment: CommentUpdateInput) {
-  updateComment(comment: $comment) {
+export const updateComment = /* GraphQL */ `mutation UpdateComment($input: CommentUpdateInput) {
+  updateComment(input: $input) {
     id
     content
     user_id
@@ -140,8 +140,8 @@ export const createPriority = /* GraphQL */ `mutation CreatePriority($input: Pri
   APITypes.CreatePriorityMutationVariables,
   APITypes.CreatePriorityMutation
 >;
-export const updatePriority = /* GraphQL */ `mutation UpdatePriority($priority: PriorityUpdateInput) {
-  updatePriority(priority: $priority) {
+export const updatePriority = /* GraphQL */ `mutation UpdatePriority($input: PriorityUpdateInput) {
+  updatePriority(input: $input) {
     id
     name
     tickets {
@@ -188,8 +188,8 @@ export const createStatus = /* GraphQL */ `mutation CreateStatus($input: StatusC
   APITypes.CreateStatusMutationVariables,
   APITypes.CreateStatusMutation
 >;
-export const updateStatus = /* GraphQL */ `mutation UpdateStatus($status: StatusUpdateInput) {
-  updateStatus(status: $status) {
+export const updateStatus = /* GraphQL */ `mutation UpdateStatus($input: StatusUpdateInput) {
+  updateStatus(input: $input) {
     id
     name
     tickets {
@@ -249,8 +249,8 @@ export const createTicket = /* GraphQL */ `mutation CreateTicket($input: TicketC
   APITypes.CreateTicketMutationVariables,
   APITypes.CreateTicketMutation
 >;
-export const updateTicket = /* GraphQL */ `mutation UpdateTicket($ticket: TicketUpdateInput) {
-  updateTicket(ticket: $ticket) {
+export const updateTicket = /* GraphQL */ `mutation UpdateTicket($input: TicketUpdateInput) {
+  updateTicket(input: $input) {
     id
     subject
     content
@@ -328,8 +328,8 @@ export const createUser = /* GraphQL */ `mutation CreateUser($input: UserCreateI
   APITypes.CreateUserMutationVariables,
   APITypes.CreateUserMutation
 >;
-export const updateUser = /* GraphQL */ `mutation UpdateUser($user: UserUpdateInput) {
-  updateUser(user: $user) {
+export const updateUser = /* GraphQL */ `mutation UpdateUser($input: UserUpdateInput) {
+  updateUser(input: $input) {
     id
     name
     audits {

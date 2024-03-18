@@ -3,7 +3,7 @@
 read -r "?stack prefix [default='']: " prefix
 prefix=${prefix:-''}
 
-read -r "?do you need to bootstrap (y/n)? " bootstrap
+read -r "?do you need to bootstrap (y/N)? " bootstrap
 if [[ "$bootstrap" =~ ^[Yy]$ ]]
 then
   cdk bootstrap

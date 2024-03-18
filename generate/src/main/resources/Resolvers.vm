@@ -16,10 +16,10 @@ public class Resolvers {
             BaseResolverProps.builder()
                 .fieldName("${query.name}")
                 .typeName("Query")
-                .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
-                    #foreach($q in ${query.queries})
-                            "$q"#if( $foreach.hasNext),$newline #end #end), List.of(
-                    #foreach($q in ${query.variables.entrySet()})
+                .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false,
+                List.of(#foreach($q in ${query.queries})
+                            "$q"#if( $foreach.hasNext),$newline #end #end),
+                List.of(#foreach($q in ${query.variables.entrySet()})
                             "\"${q.key}\":${q.value}"#if( $foreach.hasNext),$newline #end #end))))
                 .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                 .build()#if( $foreach.hasNext ), #end
@@ -32,12 +32,16 @@ public class Resolvers {
             BaseResolverProps.builder()
                 .fieldName("${query.name}")
                 .typeName("Mutation")
-                .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
-                    #foreach($q in ${query.queries})
-                            "$q"#if( $foreach.hasNext),$newline #end #end), List.of(
-                    #foreach($q in ${query.variables.entrySet()})
+                .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false,
+                List.of(#foreach($q in ${query.queries})
+                            "$q"#if( $foreach.hasNext),$newline #end #end),
+                List.of(#foreach($q in ${query.variables.entrySet()})
                             "\"${q.key}\":${q.value}"#if( $foreach.hasNext),$newline #end #end))))
-                .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
+                    #if(${query.generateId})
+                .responseMappingTemplate(MappingTemplate.fromString(INSERT_TEMPLATE))
+                    #else
+                .responseMappingTemplate(MappingTemplate.fromString(UPDATE_TEMPLATE))
+                    #end
                 .build()#if( $foreach.hasNext ), #end
             #end
             #if( $foreach.hasNext ), #end
@@ -48,10 +52,10 @@ public class Resolvers {
             BaseResolverProps.builder()
                 .fieldName("${relation.fkTableName}")
                 .typeName("${relation.typeName}")
-                .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false, List.of(
-                    #foreach($query in ${relation.queries})
-                        "$query"#if( $foreach.hasNext), #end #end), List.of(
-                    #foreach($q in ${relation.variables.entrySet()})
+                .requestMappingTemplate(MappingTemplate.fromString(requestTemplate(false,
+                List.of(#foreach($query in ${relation.queries})
+                        "$query"#if( $foreach.hasNext), #end #end),
+                List.of(#foreach($q in ${relation.variables.entrySet()})
                             "\"${q.key}\":${q.value}"#if( $foreach.hasNext),$newline #end #end))))
                 .responseMappingTemplate(MappingTemplate.fromString(RESPONSE_TEMPLATE))
                 .build()#if( $foreach.hasNext), #end
@@ -62,6 +66,12 @@ public class Resolvers {
 
     public static final String RESPONSE_TEMPLATE = """
                         $responseTemplate
+            """;
+    public static final String UPDATE_TEMPLATE = """
+                    $updateTemplate
+            """;
+    public static final String INSERT_TEMPLATE = """
+                            $insertTemplate
             """;
 
     public static String requestTemplate(Boolean generateId, List<String> sqlQueries, List<String> variables) {
