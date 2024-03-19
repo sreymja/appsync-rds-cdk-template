@@ -39,16 +39,16 @@ const result = await client.graphql({
 });
 ```
 
-From there you can start scaffolding out a website. It's pretty easy to use the deployed site as a backend for development
-which may not be possible in every case. Even with a single account for dev you could deploy the same stacks with a
-different prefix if you wanted to have one for each developer. So with the site configured to use the API on AWS you can
-just run `npm start` and go from there.
+From there you can start scaffolding out a website. It's pretty easy to use the deployed site as a backend for development.
+Even with a single AWS account for a team of developers you could deploy the same stacks with a
+different prefix if you wanted to have one for each developer. As the deploy scripts takes care of the config all that's
+required is to run `npm start` and the load-data.sh script from the sql-scripts folder.
 
 For me that started a process of finding out what was and wasn't working on the API. Trying a new graphql query and seeing
 if it worked and if not what the error was in the logs. Then fixing any error redeploying the AppSync stack and trying again.
 Not a very satisfying workflow but in the real world I probably would have spent some time creating some tests which would
 have highlighted any issues with the RDS resolvers earlier. That said I'd still have to deploy the code before I had
-anything to run the tests against, I'm not sure how comfortable I am with that.
+anything to run the tests against, I'm not sure how comfortable I am with that. 
 
 ### Frontend infra and deployment
 As the frontend is a static site all we need is a Cloudfront distribution backed up with a couple of s3 buckets (one for
