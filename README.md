@@ -22,4 +22,4 @@ would then need changing to reflect the purpose of the new schema
 ## Blogs
 More detail on the purpose and process of the project can be found in the blogs written about the project;
 - [Appsync (backend)](Blog-Appsync.md)
-- 
+- [Frontend](Blog-Frontend.md)
