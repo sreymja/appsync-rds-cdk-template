@@ -45,6 +45,11 @@ public class GraphQLApp {
                 .dbName(databaseStack.getDbName())
                 .build());
 
+        new FrontendStack(app, prefix + "frontend-stack", FrontendStack.FrontendStackProps.builder()
+                .env(environment)
+                .prefix(prefix)
+                .build());
+
         app.synth();
     }
 }

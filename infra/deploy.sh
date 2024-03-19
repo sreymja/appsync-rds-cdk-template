@@ -35,3 +35,14 @@ const config =  {
 
 export default config;
 EOM
+
+(
+  cd ../react-frontend || exit
+  npm run build
+)
+
+cdk deploy "${prefix}frontend-stack" --parameters prefix="$prefix" --outputs-file frontend-outputs.json
+
+frontendBucket=$(cat frontend-outputs.json | python3 -c "import json,sys;print(json.load(sys.stdin)[\"${prefix}frontend-stack\"][\"BucketName\"])")
+
+aws s3 sync ../react-frontend/build "s3://${frontendBucket}"
