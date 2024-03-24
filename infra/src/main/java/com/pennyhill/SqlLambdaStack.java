@@ -45,14 +45,6 @@ public class SqlLambdaStack extends Stack {
         lambdaRole.attachInlinePolicy(new Policy(this, "s3-bucket-policy",
                 PolicyProps.builder().statements(List.of(new PolicyStatement[]{statement3})).build()));
 
-//        s3.addToResourcePolicy(PolicyStatement.Builder.create()
-//                .effect(Effect.ALLOW)
-//                .actions(List.of("s3:*"))
-//                .resources(List.of("arn:aws:s3:::" + s3.getBucketName(), "arn:aws:s3:::" + s3.getBucketName() + "/*"))
-//                .principals(List.of(lambdaRole.getGrantPrincipal()))
-//                .build()
-//        );
-
         function = new Function(this, props.getPrefix() + "SqlLambda", FunctionProps.builder()
                 .role(lambdaRole)
                 .memorySize(1024)
